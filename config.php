@@ -1,0 +1,7 @@
+<?php
+
+//DEFINIÇÕES DO TEMA
+define('THEME_NAME', 'my-ecommerce');
+define('THEME_PATH', __DIR__ . DIRECTORY_SEPARATOR . 'themes'.DIRECTORY_SEPARATOR.THEME_NAME);
+define('TPL_DIR', THEME_PATH . DIRECTORY_SEPARATOR . 'tpl');
+define('CACHE_DIR', THEME_PATH . DIRECTORY_SEPARATOR . 'cache');
