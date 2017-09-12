@@ -8,11 +8,11 @@ class page {
 
     /** @var Tpl */
     private $tpl;
-    private $options = array();
-    private $defaults = array();
+    private $defaults = [
+        'THEME_URI' => THEME_URI
+    ];
 
     public function __construct($opts = array(), $debug = false) {
-        $this->options = array_merge($this->defaults, $opts);
         // config
         $config = array(
             "tpl_dir" => TPL_DIR . DIRECTORY_SEPARATOR,
@@ -20,17 +20,20 @@ class page {
             "debug" => (boolean) $debug
         );
         Tpl::configure($config);
-
-        $this->setData($opts);
-
         $this->tpl = new Tpl;
+
+        //Datas
+        $this->setData($this->defaults);
+        $this->setData($opts);
+        
+        //Show Header
         $this->tpl->draw('header');
     }
 
     //======================================
     // PUBLIC METHODS                      
     //======================================
-    public function setTpl($tplName, $data =  array(), $returnHTML = false) {
+    public function setTpl($tplName, $data = array(), $returnHTML = false) {
         $this->setData($data);
         return $this->tpl->draw($tplName, $returnHTML);
     }
