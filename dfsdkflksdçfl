@@ -1,0 +1,35 @@
+[33mcommit 0717b388457d0913aa4394368dae8745bc89e5f5[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m)[m
+Author: sie <franfellipe2@hotmail.com>
+Date:   Wed Sep 13 19:50:13 2017 -0300
+
+    criado a class user e trabalhando na login
+
+[33mcommit 9c8e6478876691cb6d0af8eb929260270554d807[m[33m ([m[1;31morigin/master[m[33m)[m
+Author: sie <franfellipe2@hotmail.com>
+Date:   Tue Sep 12 18:59:28 2017 -0300
+
+    criamos PageAdmin e incluimos o tpl admin
+
+[33mcommit 9bd616bb048596698936530f08b074d05ad8b9b1[m
+Author: sie <franfellipe2@hotmail.com>
+Date:   Tue Sep 12 17:23:49 2017 -0300
+
+    tpl site
+
+[33mcommit 8735ca92338acbe2e340d40b495a1108fcd6adf3[m
+Author: sie <franfellipe2@hotmail.com>
+Date:   Tue Sep 12 16:09:25 2017 -0300
+
+    classe page criada
+
+[33mcommit d2e4ee27664b6e969e42679e7d2fd03f47f153ed[m
+Author: sie <franfellipe2@hotmail.com>
+Date:   Mon Sep 11 18:18:44 2017 -0300
+
+    autoload hcode classes
+
+[33mcommit 0afa22c83cfd592f9f984d501d73ff6d1167cc0c[m
+Author: sie <franfellipe2@hotmail.com>
+Date:   Mon Sep 11 17:18:03 2017 -0300
+
+    inicio do projeto

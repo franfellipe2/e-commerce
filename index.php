@@ -29,10 +29,12 @@ $app->get('/', function() {
 // ADMIN
 // ====================================
 $app->get('/admin/', function() {
+    
     User::verifyLogin(3);
     $tpl = new PageAdmin();
     $tpl->setTpl('index');
 });
+
 $app->get('/admin/login/', function() {
 
     $tpl = new PageAdmin(array('footer' => false, 'header' => false));
