@@ -13,24 +13,29 @@ class Page {
         "cache_dir" => CACHE_DIR . DIRECTORY_SEPARATOR,
         "debug" => false
     );
+    private $options;
     private $defaults = [
-        'HOME' => THEME_URI,
-        'ADMIN_URI' => ADMIN_URI,
-        'THEME_URI' => THEME_URI
+        'HOME' => HOME,
+        'ADMIN_URL' => ADMIN_URL,
+        'THEME_URL' => THEME_URL,        
+        'header' => true,
+        'footer' => true
     ];
 
     public function __construct($opts = array(), $debug = false) {
+
+        $this->options = array_merge($this->defaults, $opts);
+
         // config
         $this->setConfig(array('debug' => $debug));
         Tpl::configure($this->config);
         $this->tpl = new Tpl;
 
         //Datas
-        $this->setData($this->defaults);
-        $this->setData($opts);
+        $this->setData($this->options);
 
         //Show Header
-        $this->tpl->draw('header');
+        if($this->options['header'] === true ) $this->tpl->draw('header');
     }
 
     //======================================
@@ -42,7 +47,7 @@ class Page {
     }
 
     public function __destruct() {
-        $this->tpl->draw('footer');
+        if($this->options['footer'] === true ) $this->tpl->draw('footer');
     }
 
     public function setConfig(array $arrConfig) {
