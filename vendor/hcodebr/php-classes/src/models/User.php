@@ -47,20 +47,40 @@ class User extends Model {
         endif; //END check result
     }
 
-    public static function verifyLogin($level) {
+    /**
+     * Verifica se existe um usuário logado e protege areas restritas através do parametro $level
+     * @param int $level Nível de permisão do usuário: 1 cliente, 2 editor, 3 administrador
+     * @return boolean
+     */
+    public static function verifyLogin($level = 1) {
 
-        if (
-                !isset($_SESSION[self::SESSION]) || $_SESSION[self::SESSION]['user_id'] <= 0 || $_SESSION[self::SESSION]['user_level'] < $level
-        ):
-            header('location: ' . HOME . '/admin/login/?access=false');
+        if (!isset($_SESSION[self::SESSION])):
+            header('location: ' . HOME . '/admin/login/');
+            exit;
+        elseif ($_SESSION[self::SESSION]['user_id'] <= 0 || $_SESSION[self::SESSION]['user_level'] < $level):
+            header('location: ' . HOME . '/admin/login/?access=denied');
             exit;
         else:
             return true;
         endif;
     }
 
+    /**
+     * Verifica se existe um usuário logado com o nivel especificado no parametro $level
+     * @param int $level Nivel do usuário logado:  1 cliente, 2 editor, 3 administrador
+     */
+    public static function loginLevel($level) {        
+        if (isset($_SESSION[self::SESSION]) && $_SESSION[self::SESSION]['user_id'] > 0 && $_SESSION[self::SESSION]['user_level'] == $level):            
+            return true;
+        else:
+            return false;
+        endif;
+    }
+
     public static function logout() {
-        unlink($_SESSION[self::SESSION]);
+        $_SESSION[self::SESSION] = null;
+        header('location: ' . HOME . '/admin/login');
+        exit;
     }
 
     public static function listAll() {

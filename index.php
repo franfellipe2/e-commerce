@@ -36,14 +36,19 @@ $app->get('/admin/', function() {
 });
 
 $app->get('/admin/login/', function() {
+    
+    if(User::loginLevel(3)):
+        header('location: '.ADMIN_URL);
+        exit;
+    endif;
 
     $tpl = new PageAdmin(array('footer' => false, 'header' => false));
     $tpl->setTpl('login');
 });
+
 $app->post('/admin/login/', function() {
 
     try {
-
         $user = User::login($_POST['user'], $_POST['pass']);
         header('location: ' . HOME . '/admin');
         exit;
@@ -51,6 +56,10 @@ $app->post('/admin/login/', function() {
 
         echo $ex->getMessage();
     }
+});
+
+$app->get('/admin/logout', function() {
+    User::logout();
 });
 
 $app->get('/admin/users/', function() {
