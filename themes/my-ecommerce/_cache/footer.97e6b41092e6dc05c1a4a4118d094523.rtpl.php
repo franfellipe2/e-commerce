@@ -82,7 +82,7 @@
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     
     <!-- jQuery sticky menu -->
-    <script src="<?php echo htmlspecialchars( $THEME_URL, ENT_COMPAT, 'UTF-8', FALSE ); ?>js/owl.carousel.min.js"></script>
+    <script src="<?php echo htmlspecialchars( $THEME_URL, ENT_COMPAT, 'UTF-8', FALSE ); ?>/js/owl.carousel.min.js"></script>
     <script src="<?php echo htmlspecialchars( $THEME_URL, ENT_COMPAT, 'UTF-8', FALSE ); ?>/js/jquery.sticky.js"></script>
     
     <!-- jQuery easing -->
