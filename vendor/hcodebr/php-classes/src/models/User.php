@@ -52,14 +52,19 @@ class User extends Model {
         if (
                 !isset($_SESSION[self::SESSION]) || $_SESSION[self::SESSION]['user_id'] <= 0 || $_SESSION[self::SESSION]['user_level'] < $level
         ):
-            echo '<hr>LOGIN NÃO PERMITIDO</hr>';
-            header('location: '.HOME.'/admin/login/');
-            die;
+            header('location: ' . HOME . '/admin/login/?access=false');
+            exit;
         else:
-            echo '<hr>LOGADO</hr>';
-            var_dump($_SESSION);
             return true;
         endif;
+    }
+
+    public static function logout() {
+        unlink($_SESSION[self::SESSION]);
+    }
+
+    public static function listAll() {
+        
     }
 
 }

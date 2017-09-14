@@ -29,7 +29,7 @@ $app->get('/', function() {
 // ADMIN
 // ====================================
 $app->get('/admin/', function() {
-    
+
     User::verifyLogin(3);
     $tpl = new PageAdmin();
     $tpl->setTpl('index');
@@ -45,13 +45,19 @@ $app->post('/admin/login/', function() {
     try {
 
         $user = User::login($_POST['user'], $_POST['pass']);
-        var_dump($user);
         header('location: ' . HOME . '/admin');
         exit;
     } catch (Exception $ex) {
 
         echo $ex->getMessage();
     }
+});
+
+$app->get('/admin/users/', function() {
+
+    User::verifyLogin(3);
+    $tpl = new PageAdmin();
+    $tpl->setTpl('users');
 });
 
 $app->run();
