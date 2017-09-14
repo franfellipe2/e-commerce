@@ -82,17 +82,17 @@
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     
     <!-- jQuery sticky menu -->
-    <script src="<?php echo htmlspecialchars( $THEME_URI, ENT_COMPAT, 'UTF-8', FALSE ); ?>js/owl.carousel.min.js"></script>
-    <script src="<?php echo htmlspecialchars( $THEME_URI, ENT_COMPAT, 'UTF-8', FALSE ); ?>/js/jquery.sticky.js"></script>
+    <script src="<?php echo htmlspecialchars( $THEME_URL, ENT_COMPAT, 'UTF-8', FALSE ); ?>js/owl.carousel.min.js"></script>
+    <script src="<?php echo htmlspecialchars( $THEME_URL, ENT_COMPAT, 'UTF-8', FALSE ); ?>/js/jquery.sticky.js"></script>
     
     <!-- jQuery easing -->
-    <script src="<?php echo htmlspecialchars( $THEME_URI, ENT_COMPAT, 'UTF-8', FALSE ); ?>/js/jquery.easing.1.3.min.js"></script>
+    <script src="<?php echo htmlspecialchars( $THEME_URL, ENT_COMPAT, 'UTF-8', FALSE ); ?>/js/jquery.easing.1.3.min.js"></script>
     
     <!-- Main Script -->
-    <script src="<?php echo htmlspecialchars( $THEME_URI, ENT_COMPAT, 'UTF-8', FALSE ); ?>/js/main.js"></script>
+    <script src="<?php echo htmlspecialchars( $THEME_URL, ENT_COMPAT, 'UTF-8', FALSE ); ?>/js/main.js"></script>
     
     <!-- Slider -->
-    <script type="text/javascript" src="<?php echo htmlspecialchars( $THEME_URI, ENT_COMPAT, 'UTF-8', FALSE ); ?>/js/bxslider.min.js"></script>
-    <script type="text/javascript" src="<?php echo htmlspecialchars( $THEME_URI, ENT_COMPAT, 'UTF-8', FALSE ); ?>/js/script.slider.js"></script>
+    <script type="text/javascript" src="<?php echo htmlspecialchars( $THEME_URL, ENT_COMPAT, 'UTF-8', FALSE ); ?>/js/bxslider.min.js"></script>
+    <script type="text/javascript" src="<?php echo htmlspecialchars( $THEME_URL, ENT_COMPAT, 'UTF-8', FALSE ); ?>/js/script.slider.js"></script>
   </body>
 </html>

@@ -12,15 +12,15 @@
     <link href='http://fonts.googleapis.com/css?family=Raleway:400,100' rel='stylesheet' type='text/css'>
     
     <!-- Bootstrap -->
-    <link rel="stylesheet" href="<?php echo htmlspecialchars( $THEME_URI, ENT_COMPAT, 'UTF-8', FALSE ); ?>/css/bootstrap.min.css">
+    <link rel="stylesheet" href="<?php echo htmlspecialchars( $THEME_URL, ENT_COMPAT, 'UTF-8', FALSE ); ?>/css/bootstrap.min.css">
     
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="<?php echo htmlspecialchars( $THEME_URI, ENT_COMPAT, 'UTF-8', FALSE ); ?>/css/font-awesome.min.css">
+    <link rel="stylesheet" href="<?php echo htmlspecialchars( $THEME_URL, ENT_COMPAT, 'UTF-8', FALSE ); ?>/css/font-awesome.min.css">
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="<?php echo htmlspecialchars( $THEME_URI, ENT_COMPAT, 'UTF-8', FALSE ); ?>/css/owl.carousel.css">
-    <link rel="stylesheet" href="<?php echo htmlspecialchars( $THEME_URI, ENT_COMPAT, 'UTF-8', FALSE ); ?>/css/style.css">
-    <link rel="stylesheet" href="<?php echo htmlspecialchars( $THEME_URI, ENT_COMPAT, 'UTF-8', FALSE ); ?>/css/responsive.css">
+    <link rel="stylesheet" href="<?php echo htmlspecialchars( $THEME_URL, ENT_COMPAT, 'UTF-8', FALSE ); ?>/css/owl.carousel.css">
+    <link rel="stylesheet" href="<?php echo htmlspecialchars( $THEME_URL, ENT_COMPAT, 'UTF-8', FALSE ); ?>/css/style.css">
+    <link rel="stylesheet" href="<?php echo htmlspecialchars( $THEME_URL, ENT_COMPAT, 'UTF-8', FALSE ); ?>/css/responsive.css">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -75,7 +75,7 @@
             <div class="row">
                 <div class="col-sm-6">
                     <div class="logo">
-                        <h1><a href="#"><img src="<?php echo htmlspecialchars( $THEME_URI, ENT_COMPAT, 'UTF-8', FALSE ); ?>/img/logo.png"></a></h1>
+                        <h1><a href="#"><img src="<?php echo htmlspecialchars( $THEME_URL, ENT_COMPAT, 'UTF-8', FALSE ); ?>/img/logo.png"></a></h1>
                     </div>
                 </div>
                 
