@@ -1,66 +1,74 @@
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
-<!-- Content Header (Page header) -->
-<section class="content-header">
-  <h1>
-    Lista de Usuários
-  </h1>
-  <ol class="breadcrumb">
-    <li><a href="/admin"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li><a href="/admin/users">Usuários</a></li>
-    <li class="active"><a href="/admin/users/create">Cadastrar</a></li>
-  </ol>
-</section>
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            Lista de Usuários
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="/admin"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li><a href="/admin/users">Usuários</a></li>
+            <li class="active"><a href="/admin/users/create">Cadastrar</a></li>
+        </ol>
+    </section>
 
-<!-- Main content -->
-<section class="content">
+    <!-- Main content -->
+    <section class="content">
 
-  <div class="row">
-  	<div class="col-md-12">
-  		<div class="box box-success">
-        <div class="box-header with-border">
-          <h3 class="box-title">Novo Usuário</h3>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box box-success">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Novo Usuário</h3>
+                    </div>
+                    <!-- /.box-header -->
+                    <!-- form start -->
+                    <form role="form" action="{$ADMIN_URL}/users/create" method="post">
+                        <div class="box-body">
+                            <div class="form-group {if="!empty($error.person_name)"}has-warning{/if}">
+                                <label for="person_name">Nome</label>
+                                <input type="text" class="form-control" id="person_name" name="person_name" placeholder="Digite o nome" {if="!empty($data.person_name)"}value="{$data.person_name}"{/if}>
+                                <span class="help-block">{if="!empty($error.person_name)"}{$error.person_name}{/if}</span>
+                            </div>
+                            <div class="form-group {if="!empty($error.user_login)"}has-warning{/if}">
+                                <label for="user_login">Login</label>
+                                <input type="text" class="form-control" id="user_login" name="user_login" placeholder="Digite o login" {if="!empty($data.user_login)"}value="{$data.user_login}"{/if}>
+                                <span class="help-block">{if="!empty($error.user_login)"}{$error.user_login}{/if}</span>
+                            </div>
+                            <div class="form-group">
+                                <label for="person_phone">Telefone</label>
+                                <input type="tel" class="form-control" id="person_phone" name="person_phone" placeholder="Digite o telefone" {if="!empty($data.person_phone)"}value="{$data.person_phone}"{/if}>
+                            </div>
+                            <div class="form-group">
+                                <label for="person_mail">E-mail</label>
+                                <input type="email" class="form-control" id="person_mail" name="person_mail" placeholder="Digite o e-mail" {if="!empty($data.person_mail)"}value="{$data.person_mail}"{/if}>
+                            </div>
+                            <div class="form-group {if="!empty($error.user_pass)"}has-warning{/if}">
+                                <label for="user_pass">Senha</label>
+                                <input type="password" class="form-control" id="user_pass" name="user_pass" placeholder="Digite a senha">
+                                <span class="help-block">{if="!empty($error.user_pass)"}{$error.user_pass}{/if}</span>
+                            </div>
+                            <div class="form-group {if="!empty($error.user_rpass)"}has-warning{/if}">
+                                <label for="user_rpass">Repita a senha</label>
+                                <input type="password" class="form-control" id="user_pass" name="user_rpass" placeholder="Repita a senha">
+                                <span class="help-block">{if="!empty($error.user_rpass)"}{$error.user_rpass}{/if}</span>
+                            </div>
+                            <div class="checkbox">                                
+                                <label><input type="radio" name="user_level" value="1" {if="!empty($data.user_level) && $data.user_level == '1'"}checked{else}checked{/if}> Cliente</label>
+                                <label><input type="radio" name="user_level" value="2" {if="!empty($data.user_level) && $data.user_level == '2'"}checked{/if}> Editor  </label>
+                                <label><input type="radio" name="user_level" value="3" {if="!empty($data.user_level) && $data.user_level == '3'"}checked{/if}> Administrador  </label>
+                            </div>
+                        </div>
+                        <!-- /.box-body -->
+                        <div class="box-footer">
+                            <button type="submit" class="btn btn-success">Cadastrar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-        <!-- /.box-header -->
-        <!-- form start -->
-        <form role="form" action="/admin/users/create" method="post">
-          <div class="box-body">
-            <div class="form-group">
-              <label for="desperson">Nome</label>
-              <input type="text" class="form-control" id="desperson" name="desperson" placeholder="Digite o nome">
-            </div>
-            <div class="form-group">
-              <label for="deslogin">Login</label>
-              <input type="text" class="form-control" id="deslogin" name="deslogin" placeholder="Digite o login">
-            </div>
-            <div class="form-group">
-              <label for="nrphone">Telefone</label>
-              <input type="tel" class="form-control" id="nrphone" name="nrphone" placeholder="Digite o telefone">
-            </div>
-            <div class="form-group">
-              <label for="desemail">E-mail</label>
-              <input type="email" class="form-control" id="desemail" name="desemail" placeholder="Digite o e-mail">
-            </div>
-            <div class="form-group">
-              <label for="despassword">Senha</label>
-              <input type="password" class="form-control" id="despassword" name="despassword" placeholder="Digite a senha">
-            </div>
-            <div class="checkbox">
-              <label>
-                <input type="checkbox" name="inadmin" value="1"> Acesso de Administrador
-              </label>
-            </div>
-          </div>
-          <!-- /.box-body -->
-          <div class="box-footer">
-            <button type="submit" class="btn btn-success">Cadastrar</button>
-          </div>
-        </form>
-      </div>
-  	</div>
-  </div>
 
-</section>
-<!-- /.content -->
+    </section>
+    <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->

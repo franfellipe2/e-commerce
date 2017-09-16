@@ -30,21 +30,25 @@
                     <th>Nome</th>
                     <th>E-mail</th>
                     <th>Login</th>
-                    <th style="width: 60px">Admin</th>
+                    <th style="width: 60px">Nível</th>
                     <th style="width: 140px">&nbsp;</th>
                   </tr>
                 </thead>
                 <tbody>
                   {loop="$users"}
                   <tr>
-                    <td>{$value.iduser}</td>
-                    <td>{$value.desperson}</td>
-                    <td>{$value.desemail}</td>
-                    <td>{$value.deslogin}</td/>
-                    <td>{if="$value.inadmin == 1"}Sim{else}Não{/if}</td>
+                    <td>{$value.user_id}</td>
+                    <td>{$value.person_name}</td>
+                    <td>{$value.person_mail}</td>
+                    <td>{$value.user_login}</td/>
                     <td>
-                      <a href="{$HOME}/admin/users/{$value.iduser}" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i> Editar</a>
-                      <a href="{$HOME}/admin/users/{$value.iduser}/delete" onclick="return confirm('Deseja realmente excluir este registro?')" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i> Excluir</a>
+                        {if="$value.user_level == 3"}Admin{/if}
+                        {if="$value.user_level == 2"}Editor{/if}
+                        {if="$value.user_level == 1"}Cliente{/if}
+                    </td>
+                    <td>
+                      <a href="{$HOME}/admin/users/{$value.user_id}" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i> Editar</a>
+                      <a href="{$HOME}/admin/users/{$value.user_id}/delete" onclick="return confirm('Deseja realmente excluir este registro?')" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i> Excluir</a>
                     </td>
                   </tr>
                   {/loop}

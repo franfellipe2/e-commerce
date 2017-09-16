@@ -30,24 +30,33 @@
                     <th>Nome</th>
                     <th>E-mail</th>
                     <th>Login</th>
-                    <th style="width: 60px">Admin</th>
+                    <th style="width: 60px">Nível</th>
                     <th style="width: 140px">&nbsp;</th>
                   </tr>
                 </thead>
                 <tbody>
                   <?php $counter1=-1;  if( isset($users) && ( is_array($users) || $users instanceof Traversable ) && sizeof($users) ) foreach( $users as $key1 => $value1 ){ $counter1++; ?>
+
                   <tr>
-                    <td><?php echo htmlspecialchars( $value1["iduser"], ENT_COMPAT, 'UTF-8', FALSE ); ?></td>
-                    <td><?php echo htmlspecialchars( $value1["desperson"], ENT_COMPAT, 'UTF-8', FALSE ); ?></td>
-                    <td><?php echo htmlspecialchars( $value1["desemail"], ENT_COMPAT, 'UTF-8', FALSE ); ?></td>
-                    <td><?php echo htmlspecialchars( $value1["deslogin"], ENT_COMPAT, 'UTF-8', FALSE ); ?></td/>
-                    <td><?php if( $value1["inadmin"] == 1 ){ ?>Sim<?php }else{ ?>Não<?php } ?></td>
+                    <td><?php echo htmlspecialchars( $value1["user_id"], ENT_COMPAT, 'UTF-8', FALSE ); ?></td>
+                    <td><?php echo htmlspecialchars( $value1["person_name"], ENT_COMPAT, 'UTF-8', FALSE ); ?></td>
+                    <td><?php echo htmlspecialchars( $value1["person_mail"], ENT_COMPAT, 'UTF-8', FALSE ); ?></td>
+                    <td><?php echo htmlspecialchars( $value1["user_login"], ENT_COMPAT, 'UTF-8', FALSE ); ?></td/>
                     <td>
-                      <a href="<?php echo htmlspecialchars( $HOME, ENT_COMPAT, 'UTF-8', FALSE ); ?>/admin/users/<?php echo htmlspecialchars( $value1["iduser"], ENT_COMPAT, 'UTF-8', FALSE ); ?>" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i> Editar</a>
-                      <a href="<?php echo htmlspecialchars( $HOME, ENT_COMPAT, 'UTF-8', FALSE ); ?>/admin/users/<?php echo htmlspecialchars( $value1["iduser"], ENT_COMPAT, 'UTF-8', FALSE ); ?>/delete" onclick="return confirm('Deseja realmente excluir este registro?')" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i> Excluir</a>
+                        <?php if( $value1["user_level"] == 3 ){ ?>Admin<?php } ?>
+
+                        <?php if( $value1["user_level"] == 2 ){ ?>Editor<?php } ?>
+
+                        <?php if( $value1["user_level"] == 1 ){ ?>Cliente<?php } ?>
+
+                    </td>
+                    <td>
+                      <a href="<?php echo htmlspecialchars( $HOME, ENT_COMPAT, 'UTF-8', FALSE ); ?>/admin/users/<?php echo htmlspecialchars( $value1["user_id"], ENT_COMPAT, 'UTF-8', FALSE ); ?>" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i> Editar</a>
+                      <a href="<?php echo htmlspecialchars( $HOME, ENT_COMPAT, 'UTF-8', FALSE ); ?>/admin/users/<?php echo htmlspecialchars( $value1["user_id"], ENT_COMPAT, 'UTF-8', FALSE ); ?>/delete" onclick="return confirm('Deseja realmente excluir este registro?')" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i> Excluir</a>
                     </td>
                   </tr>
                   <?php } ?>
+
                 </tbody>
               </table>
             </div>

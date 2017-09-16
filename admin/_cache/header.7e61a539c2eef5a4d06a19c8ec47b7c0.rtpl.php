@@ -23,6 +23,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               apply the skin class to the body tag so the changes take effect.
         -->
         <link rel="stylesheet" href="<?php echo htmlspecialchars( $ADMIN_URL, ENT_COMPAT, 'UTF-8', FALSE ); ?>/dist/css/skins/skin-blue.min.css">
+        <link rel="stylesheet" href="<?php echo htmlspecialchars( $HOME, ENT_COMPAT, 'UTF-8', FALSE ); ?>/style.css">
 
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
