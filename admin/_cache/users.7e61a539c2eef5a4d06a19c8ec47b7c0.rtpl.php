@@ -37,7 +37,7 @@
                 <tbody>
                   <?php $counter1=-1;  if( isset($users) && ( is_array($users) || $users instanceof Traversable ) && sizeof($users) ) foreach( $users as $key1 => $value1 ){ $counter1++; ?>
 
-                  <tr>
+                  <tr <?php if( $value1["user_id"] == $session["user_id"] ){ ?>style="border-left:4px solid #d73925;background:#fff2f1"<?php } ?>>
                     <td><?php echo htmlspecialchars( $value1["user_id"], ENT_COMPAT, 'UTF-8', FALSE ); ?></td>
                     <td><?php echo htmlspecialchars( $value1["person_name"], ENT_COMPAT, 'UTF-8', FALSE ); ?></td>
                     <td><?php echo htmlspecialchars( $value1["person_mail"], ENT_COMPAT, 'UTF-8', FALSE ); ?></td>
@@ -52,7 +52,11 @@
                     </td>
                     <td>
                       <a href="<?php echo htmlspecialchars( $HOME, ENT_COMPAT, 'UTF-8', FALSE ); ?>/admin/users/<?php echo htmlspecialchars( $value1["user_id"], ENT_COMPAT, 'UTF-8', FALSE ); ?>" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i> Editar</a>
+                      <?php if( $value1["user_id"] != $session["user_id"] ){ ?>
+
                       <a href="<?php echo htmlspecialchars( $HOME, ENT_COMPAT, 'UTF-8', FALSE ); ?>/admin/users/<?php echo htmlspecialchars( $value1["user_id"], ENT_COMPAT, 'UTF-8', FALSE ); ?>/delete" onclick="return confirm('Deseja realmente excluir este registro?')" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i> Excluir</a>
+                      <?php } ?>
+
                     </td>
                   </tr>
                   <?php } ?>

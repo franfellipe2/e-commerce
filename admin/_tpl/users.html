@@ -36,7 +36,7 @@
                 </thead>
                 <tbody>
                   {loop="$users"}
-                  <tr>
+                  <tr {if="$value.user_id == $session.user_id"}style="border-left:4px solid #d73925;background:#fff2f1"{/if}>
                     <td>{$value.user_id}</td>
                     <td>{$value.person_name}</td>
                     <td>{$value.person_mail}</td>
@@ -48,7 +48,9 @@
                     </td>
                     <td>
                       <a href="{$HOME}/admin/users/{$value.user_id}" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i> Editar</a>
+                      {if="$value.user_id != $session.user_id"}
                       <a href="{$HOME}/admin/users/{$value.user_id}/delete" onclick="return confirm('Deseja realmente excluir este registro?')" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i> Excluir</a>
+                      {/if}
                     </td>
                   </tr>
                   {/loop}

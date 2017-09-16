@@ -91,7 +91,7 @@ $app->get('/admin/users/', function() {
     $tpl = new PageAdmin();
     $users = User::listAll();
 
-    $tpl->setTpl('users', array('users' => $users));
+    $tpl->setTpl('users', array('users' => $users, 'session' => $_SESSION[User::SESSION]));
 });
 
 $app->get('/admin/users/:id/delete', function($id) {
@@ -100,7 +100,7 @@ $app->get('/admin/users/:id/delete', function($id) {
     $tpl = new PageAdmin();
     User::delete($id);
     $users = User::listAll();
-    $tpl->setTpl('users', array('users' => $users));
+    $tpl->setTpl('users', array('users' => $users, 'session' => $_SESSION[User::SESSION]));
 });
 
 $app->get('/admin/users/:id', function($id) {
@@ -110,19 +110,19 @@ $app->get('/admin/users/:id', function($id) {
     $user = new User();
     $user->setData(User::getUserById($id));
 
-    $tpl->setTpl('users-update', array('data' => $user->getValues(), 'error' => ''));
+    $tpl->setTpl('users-update', array('data' => $user->getValues(), 'session' => $_SESSION[User::SESSION]));
 });
 $app->post('/admin/users/:id', function($id) {
 
     User::verifyLogin(3);
-    
+
     $tpl = new PageAdmin();
-    
+
     $user = new User();
-    $user->setData(User::getUserById($id));    
-    $user->update();    
-    
-    $tpl->setTpl('users-update', array('data' => $user->getValues(), 'error' => $user->getError()));
+    $user->setData(User::getUserById($id));
+    $user->update();
+
+    $tpl->setTpl('users-update', array('data' => $user->getValues(), 'error' => $user->getError(), 'session' => $_SESSION[User::SESSION]));
 });
 
 

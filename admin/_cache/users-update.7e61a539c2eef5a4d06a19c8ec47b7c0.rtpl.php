@@ -8,7 +8,7 @@
         <ol class="breadcrumb">
             <li><a href="/admin"><i class="fa fa-dashboard"></i> Home</a></li>
             <li><a href="/admin/users">Usuários</a></li>
-            <li class="active"><a href="/admin/users/create">Cadastrar</a></li>
+            <li class="active"><a href="/admin/users/create">Atualizar</a></li>
         </ol>
     </section>
 
@@ -19,7 +19,7 @@
             <div class="col-md-12">
                 <div class="box box-success">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Novo Usuário</h3>
+                        <h3 class="box-title">Atualizar Usuário</h3>
                     </div>
                     <!-- /.box-header -->
                     <!-- form start -->
@@ -43,10 +43,10 @@
                                 <label for="person_mail">E-mail</label>
                                 <input type="email" class="form-control" id="person_mail" name="person_mail" placeholder="Digite o e-mail" <?php if( !empty($data["person_mail"]) ){ ?>value="<?php echo htmlspecialchars( $data["person_mail"], ENT_COMPAT, 'UTF-8', FALSE ); ?>"<?php } ?>>
                             </div>
-                            <div class="checkbox">                                
-                                <label><input type="radio" name="user_level" value="1" <?php if( !empty($data["user_level"]) && $data["user_level"] == '1' ){ ?>checked<?php }else{ ?>checked<?php } ?>> Cliente</label>
-                                <label><input type="radio" name="user_level" value="2" <?php if( !empty($data["user_level"]) && $data["user_level"] == '2' ){ ?>checked<?php } ?>> Editor  </label>
-                                <label><input type="radio" name="user_level" value="3" <?php if( !empty($data["user_level"]) && $data["user_level"] == '3' ){ ?>checked<?php } ?>> Administrador  </label>
+                            <div class="checkbox">    		
+                                <label <?php if( $data["user_id"] == $session["user_id"] && $session["user_level"] == 3 ){ ?>style="color:#888;cursor:no-drop;"<?php } ?>><input type="radio" name="user_level" value="1" <?php if( !empty($data["user_level"]) && $data["user_level"] == '1' ){ ?>checked<?php }else{ ?>checked<?php } ?> <?php if( $data["user_id"] == $session["user_id"] && $session["user_level"] == 3 ){ ?>disabled="disabled"<?php } ?> > Cliente</label>
+                                <label <?php if( $data["user_id"] == $session["user_id"] && $session["user_level"] == 3 ){ ?>style="color:#888;cursor:no-drop;"<?php } ?>><input type="radio" name="user_level" value="2" <?php if( !empty($data["user_level"]) && $data["user_level"] == '2' ){ ?>checked<?php } ?> <?php if( $data["user_id"] == $session["user_id"] && $session["user_level"] == 3 ){ ?>disabled="disabled"<?php } ?> > Editor  </label>								
+                                <label><input type="radio" name="user_level" value="3" <?php if( !empty($data["user_level"]) && $data["user_level"] == '3' ){ ?>checked<?php } ?> > Administrador  </label>
                             </div>
                         </div>
                         <!-- /.box-body -->

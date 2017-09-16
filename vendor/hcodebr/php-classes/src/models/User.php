@@ -157,9 +157,11 @@ class User extends Model {
      * @param int $user_id chave primaria do usuário no banco de dados
      */
     public static function delete($user_id) {
-        $id = (int) $user_id;
-        $sql = new Sql;
-        $result = $sql->select("call sp_users_delete(:id)", array(':id' => $id));
+        if (self::getUserById($user_id) && $_SESSION[self::SESSION]['user_id'] != $user_id):
+            $id = (int) $user_id;
+            $sql = new Sql;
+            $sql->select("call sp_users_delete(:id)", array(':id' => $id));
+        endif;
     }
 
     /**
