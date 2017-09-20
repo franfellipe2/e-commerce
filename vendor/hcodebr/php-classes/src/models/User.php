@@ -335,7 +335,7 @@ class User extends Model {
     }
 
     /**
-     * 
+     * Retorna os dados do usuário via email
      * @param type $login
      * @return boolean
      */
