@@ -72,7 +72,7 @@
                 </div>
                 <!-- /.social-auth-links -->
 
-                <a href="#">Esqueci Minha Senha</a><br>
+                <a href="<?php echo htmlspecialchars( $ADMIN_URL, ENT_COMPAT, 'UTF-8', FALSE ); ?>/forgot">Esqueci Minha Senha</a><br>
                 <a href="register.html" class="text-center">Cadastrar novo usuário</a>
 
             </div>

@@ -7,9 +7,9 @@ define('HOSTPASS', '');
 define('DBNAME', 'db_ecommerce');
 
 //DEFINIÇOES DO SITE
+define('ROOT_PATH', __DIR__);
 define('HOME', 'http://localhost/cursos/PHP-7/2-e-commerce');
 define('THEMES_DIR_NAME', 'themes'); //Nome da pasta onde estão os temas do site
-
 //DEFINIÇÕES DO TEMA
 define('THEME_NAME', 'my-ecommerce');
 define('THEME_PATH', __DIR__ . DIRECTORY_SEPARATOR . THEMES_DIR_NAME . DIRECTORY_SEPARATOR . THEME_NAME);

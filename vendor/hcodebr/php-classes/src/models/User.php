@@ -4,10 +4,12 @@ namespace Hcode\Models;
 
 use \Hcode\DB\Sql;
 use \Hcode\Model;
+use \Hcode\Mailer;
 
 class User extends Model {
 
     const SESSION = 'User';
+    const SECRET = '55330009701803289326473643785709';
     //Tabela do usuario no banco de dados
     const tbUser = 'tb_users';
 
@@ -234,6 +236,66 @@ class User extends Model {
     }
 
     /**
+     * Enviar email para recuperação de senha
+     * @param string $email
+     */
+    public static function sendForgot($email) {
+        $user = self::getUserByEmail($email);
+
+        if ($user):
+            $sql = new Sql();
+            $resultRecovery = $sql->select('CALL sp_userspasswordsrecoveries_create(:user_id, :user_ip)', array(
+                ':user_id' => $user['user_id'],
+                ':user_ip' => $_SERVER['REMOTE_ADDR']
+            ));
+
+            if (count($resultRecovery) === 0):
+                throw new Exception('Não foi possível recuperar a senha');
+            else:
+
+                $encrypt = mcrypt_encrypt(MCRYPT_RIJNDAEL_128, self::SECRET, $resultRecovery[0]['idrecovery'], MCRYPT_MODE_ECB);
+                $code = base64_encode($encrypt);
+                $link = ADMIN_URL . "/forgot/reset?code=$code";
+
+                $mailer = new Mailer(
+                        $user['person_mail'], $user['person_name'], 'forgot', 'Redefinir senha', array(
+                    'name' => $user['person_name'],
+                    'link' => $link
+                        )
+                );
+                $mailer->send();
+                return array_merge($user, $resultRecovery[0]);
+
+            endif;
+
+        endif;
+    }
+
+    public static function validForgotDecrypt($code) {
+
+        $idrecovery = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, self::SECRET, base64_decode($code), MCRYPT_MODE_ECB);     
+        $sql = new Sql;
+        $result = $sql->select('SELECT * FROM tb_userspasswordsrecoveries a
+                                INNER join tb_users b
+                                WHERE a.iduser = b.user_id
+                                AND idrecovery = :direcovery
+                                AND dtrecovery IS NULL
+                                AND DATE_ADD(a.dtregister, INTERVAL 1 HOUR ) > now()', array(':direcovery' => $idrecovery));
+
+        if (count($result) > 0):
+            return $result[0];
+        else:
+            throw new \Exception('Não foi possível redefiner a senha! O tempo expirou ou a senha já foi alterada. Tente fazer <a href="'.ADMIN_URL.'/login">login</a> ou <a href="'.ADMIN_URL.'/forgot">Redefina a senha novamente!</a>');
+            return false;
+        endif;
+    }
+
+    public static function setForgotUser($idrecovery) {
+        $sql = new Sql;
+        $sql->query('UPDATE tb_userspasswordsrecoveries SET dtrecovery = NOW() WHERE idrecovery = :idrecovery', array(':idrecovery' => $idrecovery));
+    }
+
+    /**
      * Retorna os dados do usuário
      * @param int $user_id
      * @return false-or-array com os dados do usuário
@@ -272,8 +334,46 @@ class User extends Model {
         endif;
     }
 
+    /**
+     * 
+     * @param type $login
+     * @return boolean
+     */
+    public static function getUserByEmail($email) {
+
+        $email = (string) $email;
+        $users = new User();
+
+        $sql = new Sql();
+        $results = $sql->select(
+                'SELECT * FROM tb_persons a
+                    INNER JOIN tb_users b
+                    USING(person_id)
+                    WHERE a.person_mail = :email
+                    ', array(':email' => $email
+        ));
+
+        if (count($results) > 0):
+            $users->setData($results);
+            return $users->getValues()[0];
+        else:
+            return false;
+        endif;
+    }
+
     public function getError() {
         return $this->error;
     }
 
+    public function setPassword($newPassword) {
+        
+        $password = password_hash($newPassword, PASSWORD_DEFAULT);                
+        $sql = new Sql;
+        
+        $result = $sql->query('UPDATE tb_users SET user_pass = :pass WHERE user_id = :user_id', array(
+            ':pass' => $password,
+            ':user_id' => $this->getUser_id()
+        ));
+    }
+    
 }
