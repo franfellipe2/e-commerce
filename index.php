@@ -12,6 +12,7 @@ use Hcode\Page;
 use Hcode\PageAdmin;
 use Hcode\Models\User;
 use Hcode\Models\Category;
+use Hcode\Models\Products;
 
 $app = new Slim();
 
@@ -71,9 +72,8 @@ $app->get('/admin/logout', function() {
     User::logout();
 });
 
-// -------------------------
+
 // Password Recovery
-// -------------------------
 $app->post('/admin/forgot/', function() {
     $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
     $send = User::sendForgot($email);
@@ -125,9 +125,7 @@ $app->post('/admin/forgot/reset', function() {
     }
 });
 
-// --------------------------
 // ADMIN > INDEX
-// --------------------------
 $app->get('/admin/', function() {
 
     User::verifyLogin(3);
@@ -135,9 +133,8 @@ $app->get('/admin/', function() {
     $tpl->setTpl('index');
 });
 
-// ----------------------------
-// ADMIN > CREATE USER
-// ----------------------------
+
+// ADMIN > USERS
 $app->get('/admin/users/create', function() {
 
     User::verifyLogin(3);
@@ -159,7 +156,10 @@ $app->post('/admin/users/create', function() {
     endif;
 });
 
-//ADMIN > USERS
+// ----------------------------------------
+//  ADMIN > USERS
+// ----------------------------------------
+//ADMIN > USERS LISTA
 $app->get('/admin/users/', function() {
 
     User::verifyLogin(3);
@@ -203,10 +203,10 @@ $app->post('/admin/users/:id', function($id) {
     $tpl->setTpl('users-update', array('data' => $user->getValues(), 'error' => $user->getError(), 'session' => $_SESSION[User::SESSION]));
 });
 
-// =======================================
-// GERENCIAR CATEGORIAS
-// =======================================
-// lISTA DE CATEGORIAIS
+// ---------------------------------------
+// ADMIN > CATEGORIAS
+// ---------------------------------------
+// ADMIN > CATEGORIAIS LISTA
 $app->get('/admin/categories/', function() {
 
     User::verifyLogin(3);
@@ -217,6 +217,7 @@ $app->get('/admin/categories/', function() {
     ));
 });
 
+// ADMIN > CATEGORIAIS CREATE
 $app->get('/admin/categories/create/', function() {
 
     User::verifyLogin(3);
@@ -236,6 +237,7 @@ $app->post('/admin/categories/create/', function() {
     exit();
 });
 
+// ADMIN > CATEGORIAIS DELETE
 $app->get('/admin/categories/:id/delete', function($id) {
 
     User::verifyLogin(3);
@@ -245,7 +247,7 @@ $app->get('/admin/categories/:id/delete', function($id) {
     exit();
 });
 
-// EDITAR CATEGORIA
+// ADMIN > CATEGORIAIS UPDATE
 $app->get('/admin/categories/:id', function($idcategory) {
     User::verifyLogin(3);
 
@@ -269,6 +271,78 @@ $app->post('/admin/categories/:id/update', function($id) {
     header('location: ' . ADMIN_URL . '/categories/');
     exit();
 });
+
+// -------------------------------------------------------------------
+// ADMIN > PRODUTOS
+// -------------------------------------------------------------------
+// ADMIN > PRODUTOS LISTA
+$app->get('/admin/products/', function() {
+
+    User::verifyLogin(3);
+
+    $tpl = new PageAdmin();
+
+    $products = Products::listAll();
+
+    $tpl->setTpl('products', array('products' => $products));
+});
+//  ADMIN > PRODUTOS CREATE
+$app->get('/admin/products/create', function() {
+
+    User::verifyLogin(3);
+    $tpl = new PageAdmin();
+    $tpl->setTpl('products-create');
+});
+$app->post('/admin/products/create', function() {
+
+    User::verifyLogin(3);
+
+    $tpl = new PageAdmin();
+
+    $product = new Products();
+    $resultSave = $product->save();
+
+    if ($resultSave):
+        header('location: ' . ADMIN_URL . '/products/');
+        exit;
+    endif;
+
+    $tpl->setTpl('products-create', array('post' => $product->getValues(), 'error' => $product->getError()));
+});
+
+//  ADMIN > PRODUTOS UPDATE
+$app->get('/admin/products/:id', function($id) {
+
+    User::verifyLogin(3);
+    $tpl = new PageAdmin();
+    $product = Products::getProductById($id);
+
+    $tpl->setTpl('products-update', array('post' => $product));
+});
+
+$app->post('/admin/products/:id', function($id) {
+
+    User::verifyLogin(3);
+
+    $tpl = new PageAdmin();
+
+    $product = new Products();
+    $product->setIdproduct($id);
+    $resultSave = $product->save();
+
+    $tpl->setTpl('products-update', array('post' => $product->getValues(), 'error' => $product->getError()));
+});
+
+// ADMIN > PRODUCTS DELETE
+$app->get('/admin/products/delete/:id', function($id) {
+
+    User::verifyLogin(3);
+    Products::delete($id);
+
+    header('location: ' . ADMIN_URL . '/products/');
+    exit;
+});
+
 
 $app->run();
 ?>
