@@ -65,7 +65,9 @@ class Category extends Model {
             $sql = new Sql;
             $result = $sql->select("call sp_categories_save({$params})", $bParams);
             
-            return $result[0];
+            Category::updateMenuFooter();
+            
+            return $result[0];            
             
         else:
             
@@ -83,6 +85,26 @@ class Category extends Model {
         $sql = new Sql();
         
         $sql->query('DELETE FROM '.self::DB_TABLE.' WHERE idcategory = :idcategory', array(':idcategory' => $idcategory));
+        
+        Category::updateMenuFooter();
+        
+    }
+    
+    /**
+     * Atualiza o arquivo do menu do rodape
+     */
+    public static function updateMenuFooter(){
+        
+        $tplName = TPL_DIR.DIRECTORY_SEPARATOR.'menu-footer-categories.html';
+        $cats = Category::listAll();
+        $html = [];
+        
+        foreach ($cats as $cat):
+            array_push($html, "<li><a href='".HOME."/categoria/{$cat['idcategory']}'>{$cat['descategory']}</a></li>");            
+        endforeach;
+        
+        
+        file_put_contents($tplName, $html);
         
     }
 
