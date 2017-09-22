@@ -5,8 +5,7 @@ $app->get('/', function() {
 
     $tpl = new Page();
     
-    $products = Products::listAll();
-    var_dump($products);
-    
+    $products = Products::listAll();    
     $tpl->setTpl('index', array('products' => $products ));
+    
 });
