@@ -43,20 +43,28 @@
                     <nav>
                         <ul class="pagination">
                         <li>
-                            <a href="#" aria-label="Previous">
+                            <?php if( $currentpage > 1 ){ ?>
+
+                            <a href="<?php echo htmlspecialchars( $HOME, ENT_COMPAT, 'UTF-8', FALSE ); ?>/categoria/<?php echo htmlspecialchars( $cat["idcategory"], ENT_COMPAT, 'UTF-8', FALSE ); ?>?page=<?php echo htmlspecialchars( $currentpage-1, ENT_COMPAT, 'UTF-8', FALSE ); ?>" aria-label="Previous">
+                            <?php } ?>
+
                             <span aria-hidden="true">«</span>
                             </a>
                         </li>
-                        <li><a href="#">1</a></li>
-                        <li><a href="#">2</a></li>
-                        <li><a href="#">3</a></li>
-                        <li><a href="#">4</a></li>
-                        <li><a href="#">5</a></li>
+                        <?php $counter1=-1;  if( isset($links) && ( is_array($links) || $links instanceof Traversable ) && sizeof($links) ) foreach( $links as $key1 => $value1 ){ $counter1++; ?>
+
+                        <li class="<?php echo htmlspecialchars( $value1["active"], ENT_COMPAT, 'UTF-8', FALSE ); ?>"><a href='<?php echo htmlspecialchars( $value1["link"], ENT_COMPAT, 'UTF-8', FALSE ); ?>'><?php echo htmlspecialchars( $value1["page"], ENT_COMPAT, 'UTF-8', FALSE ); ?></a></li>
+                        <?php } ?>
+
+                        <?php if( $currentpage < $totalPage ){ ?>
+
                         <li>
-                            <a href="#" aria-label="Next">
+                            <a href="<?php echo htmlspecialchars( $HOME, ENT_COMPAT, 'UTF-8', FALSE ); ?>/categoria/<?php echo htmlspecialchars( $cat["idcategory"], ENT_COMPAT, 'UTF-8', FALSE ); ?>?page=<?php echo htmlspecialchars( $currentpage+1, ENT_COMPAT, 'UTF-8', FALSE ); ?>" aria-label="Next">
                             <span aria-hidden="true">»</span>
                             </a>
                         </li>
+                        <?php } ?>
+
                         </ul>
                     </nav>                        
                 </div>

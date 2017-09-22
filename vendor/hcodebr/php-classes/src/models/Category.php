@@ -4,6 +4,7 @@ namespace Hcode\Models;
 
 use \Hcode\DB\Sql;
 use \Hcode\Model;
+use Hcode\Models\Products;
 
 class Category extends Model {
 
@@ -121,11 +122,11 @@ class Category extends Model {
                 from tb_products a
                 inner join tb_categoriesproducts b on a.idproduct = b.idproduct
                 WHERE b.idcategory = :idcategory
-                )", array(':idcategory' => $this->getIdcategory())
+                ) ORDER BY idproduct DESC", array(':idcategory' => $this->getIdcategory())
         );
 
         if (count($results) > 0) {
-            
+
             foreach ($results as &$rowp):
                 $p = new Products();
                 $p->setData($rowp);
@@ -133,7 +134,6 @@ class Category extends Model {
             endforeach;
 
             return $results;
-            
         } else {
             return false;
         }
@@ -153,7 +153,7 @@ class Category extends Model {
                 ]
         );
     }
-    
+
     /**
      * Desfaz o relacionamento do produto com a categoria
      * @param int $idproduct
@@ -167,6 +167,34 @@ class Category extends Model {
             ':idproduct' => $idproduct
                 ]
         );
+    }
+
+    /**
+     * Mostra os produtos com paginaçao
+     */
+    public function getProductsPage(int $page, int $limit) {
+
+        $start = (isset($_GET['page']) ? $_GET['page'] - 1 : 0 );
+        
+        $sql = new Sql();
+        $products = $sql->select(
+                'SELECT sql_calc_found_rows * FROM  tb_products a
+                INNER JOIN tb_categoriesproducts b ON a.idproduct = b.idproduct
+                WHERE b.idcategory = :idcategory
+                LIMIT :limit OFFSET :offset
+                ', [
+            ':idcategory' => $this->getIdcategory(),
+            ':limit' => $limit,
+            ':offset' => $start
+                ]
+        );
+        
+        $totalProducts = $sql->select('select found_rows() as nrtotal');
+        
+        return [
+            'data'  => Products::cheklist($products),
+            'total' => $totalProducts[0]['nrtotal']
+        ];
     }
 
 }

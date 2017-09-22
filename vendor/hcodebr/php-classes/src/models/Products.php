@@ -20,21 +20,28 @@ class Products extends Model {
         $products = new Products();
         $sql = new Sql();
         $results = $sql->select('SELECT * FROM ' . self::DB_TABLE . ' ORDER BY idproduct DESC');
+        
+        if (count($results) > 0):
 
-        $rows = count($results);
-        if ($rows > 0):
-            
-            foreach ($results as &$rowp):
-                $p = new Products();
-                $p->setData($rowp);
-                $rowp = $p->getValues();
-            endforeach;
-
-            return $results;
+            return Products::cheklist($results);
 
         else:
             return false;
         endif;
+    }
+
+    /**
+     * Relaciona e retorna todos os dados do produto de uma lista de produtos
+     * @return array
+     */
+    public static function cheklist($products) {
+        foreach ($products as &$rowp):
+            $p = new Products();
+            $p->setData($rowp);
+            $rowp = $p->getValues();
+        endforeach;
+
+        return $products;
     }
 
     function getError() {
@@ -260,8 +267,8 @@ class Products extends Model {
                     $this->getIdproduct() . '.jpg';
 
             imagejpeg($image, $fileName);
-            imagedestroy($image);        
-            
+            imagedestroy($image);
+
         endif;
     }
 

@@ -41,20 +41,22 @@
                     <nav>
                         <ul class="pagination">
                         <li>
-                            <a href="#" aria-label="Previous">
+                            {if="$currentpage > 1"}
+                            <a href="{$HOME}/categoria/{$cat.idcategory}?page={$currentpage-1}" aria-label="Previous">
+                            {/if}
                             <span aria-hidden="true">«</span>
                             </a>
                         </li>
-                        <li><a href="#">1</a></li>
-                        <li><a href="#">2</a></li>
-                        <li><a href="#">3</a></li>
-                        <li><a href="#">4</a></li>
-                        <li><a href="#">5</a></li>
+                        {loop="$links"}
+                        <li class="{$value.active}"><a href='{$value.link}'>{$value.page}</a></li>
+                        {/loop}
+                        {if="$currentpage < $totalPage"}
                         <li>
-                            <a href="#" aria-label="Next">
+                            <a href="{$HOME}/categoria/{$cat.idcategory}?page={$currentpage+1}" aria-label="Next">
                             <span aria-hidden="true">»</span>
                             </a>
                         </li>
+                        {/if}
                         </ul>
                     </nav>                        
                 </div>
