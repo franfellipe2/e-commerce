@@ -23,10 +23,12 @@ class Products extends Model {
 
         $rows = count($results);
         if ($rows > 0):
-
-            for ($i = 0; $i < $rows; $i++):
-                $results[$i]['desphoto'] = $products->checkPhoto();
-            endfor;
+            
+            foreach ($results as &$rowp):
+                $p = new Products();
+                $p->setData($rowp);
+                $rowp = $p->getValues();
+            endforeach;
 
             return $results;
 

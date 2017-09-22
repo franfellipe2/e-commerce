@@ -3,10 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/wamp/www/cursos/PHP-7/2-e-commerce/vendor/hcodebr/php-classes/src/models/Category.php</file>
+            <file>file:/D:/wamp/www/cursos/PHP-7/2-e-commerce/admin/_tpl/products-update.html</file>
+            <file>file:/D:/wamp/www/cursos/PHP-7/2-e-commerce/admin/_cache/products.7e61a539c2eef5a4d06a19c8ec47b7c0.rtpl.php</file>
+            <file>file:/D:/wamp/www/cursos/PHP-7/2-e-commerce/admin/_tpl/header.html</file>
+            <file>file:/D:/wamp/www/cursos/PHP-7/2-e-commerce/vendor/hcodebr/php-classes/src/models/Products.php</file>
             <file>file:/D:/wamp/www/cursos/PHP-7/2-e-commerce/index.php</file>
-            <file>file:/D:/wamp/www/cursos/PHP-7/2-e-commerce/admin/_tpl/categories-update.html</file>
-            <file>file:/D:/wamp/www/cursos/PHP-7/2-e-commerce/admin/_tpl/categories.html</file>
+            <file>file:/D:/wamp/www/cursos/PHP-7/2-e-commerce/admin/_tpl/products.html</file>
+            <file>file:/D:/wamp/www/cursos/PHP-7/2-e-commerce/admin/_tpl/products-create.html</file>
         </group>
     </open-files>
 </project-private>
