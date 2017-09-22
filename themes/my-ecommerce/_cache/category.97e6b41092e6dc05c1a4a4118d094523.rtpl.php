@@ -22,7 +22,7 @@
                     <div class="product-upper">
                         <img src="<?php echo htmlspecialchars( $value1["desphoto"], ENT_COMPAT, 'UTF-8', FALSE ); ?>" alt="$value.desproduct">
                     </div>
-                    <h2><a href=""><?php echo htmlspecialchars( $value1["desproduct"], ENT_COMPAT, 'UTF-8', FALSE ); ?></a></h2>
+                    <h2><a href="<?php echo htmlspecialchars( $HOME, ENT_COMPAT, 'UTF-8', FALSE ); ?>/product/<?php echo htmlspecialchars( $value1["desurl"], ENT_COMPAT, 'UTF-8', FALSE ); ?>"><?php echo htmlspecialchars( $value1["desproduct"], ENT_COMPAT, 'UTF-8', FALSE ); ?></a></h2>
                     <div class="product-carousel-price">
                         <ins>R$<?php echo formatPrice($value1["vlprice"]); ?></ins>
                     </div>  
@@ -36,7 +36,8 @@
 
             
         </div>
-        
+        <?php if( $totalPage > 1 ){ ?>
+
         <div class="row">
             <div class="col-md-12">
                 <div class="product-pagination text-center">
@@ -70,5 +71,7 @@
                 </div>
             </div>
         </div>
+        <?php } ?>
+
     </div>
 </div>

@@ -20,7 +20,7 @@ class Products extends Model {
         $products = new Products();
         $sql = new Sql();
         $results = $sql->select('SELECT * FROM ' . self::DB_TABLE . ' ORDER BY idproduct DESC');
-        
+
         if (count($results) > 0):
 
             return Products::cheklist($results);
@@ -75,7 +75,7 @@ class Products extends Model {
         $product = new Products();
         $sql = new Sql();
         $result = $sql->select('SELECT * FROM ' . self::DB_TABLE . ' WHERE desurl = :desurl', array(
-            ':desurl' => $idproduct
+            ':desurl' => $slug
         ));
 
         if (count($result) > 0):
@@ -295,11 +295,25 @@ class Products extends Model {
         return $this->getDesphoto();
     }
 
+    /**     * 
+     * Retorna os dados dos produtos
+     * @return array
+     */
     public function getValues() {
 
         $this->checkPhoto();
         $values = parent::getValues();
         return $values;
+    }
+
+    public static function getCategories($idproduct) {
+        $sql = new Sql();
+        $result = $sql->select(' SELECT * FROM tb_categories a
+                        inner join tb_categoriesproducts b 
+                        on a.idcategory = b.idcategory
+                        where b.idproduct = :idproduct', [':idproduct' => $idproduct]
+        );
+        return $result;
     }
 
 }
