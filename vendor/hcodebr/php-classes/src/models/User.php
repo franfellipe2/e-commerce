@@ -14,6 +14,7 @@ class User extends Model {
     const tbUser = 'tb_users';
 
     private $error;
+    private static $dataSession;
 
     /**
      * Responsável por efetuar o login no sistema
@@ -240,6 +241,7 @@ class User extends Model {
      * @param string $email
      */
     public static function sendForgot($email) {
+
         $user = self::getUserByEmail($email);
 
         if ($user):
@@ -273,7 +275,7 @@ class User extends Model {
 
     public static function validForgotDecrypt($code) {
 
-        $idrecovery = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, self::SECRET, base64_decode($code), MCRYPT_MODE_ECB);     
+        $idrecovery = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, self::SECRET, base64_decode($code), MCRYPT_MODE_ECB);
         $sql = new Sql;
         $result = $sql->select('SELECT * FROM tb_userspasswordsrecoveries a
                                 INNER join tb_users b
@@ -285,7 +287,7 @@ class User extends Model {
         if (count($result) > 0):
             return $result[0];
         else:
-            throw new \Exception('Não foi possível redefiner a senha! O tempo expirou ou a senha já foi alterada. Tente fazer <a href="'.ADMIN_URL.'/login">login</a> ou <a href="'.ADMIN_URL.'/forgot">Redefina a senha novamente!</a>');
+            throw new \Exception('Não foi possível redefiner a senha! O tempo expirou ou a senha já foi alterada. Tente fazer <a href="' . ADMIN_URL . '/login">login</a> ou <a href="' . ADMIN_URL . '/forgot">Redefina a senha novamente!</a>');
             return false;
         endif;
     }
@@ -301,13 +303,17 @@ class User extends Model {
      * @return false-or-array com os dados do usuário
      */
     public static function getUserById($user_id) {
-        $users = new User();
+
         $sql = new Sql();
         $results = $sql->select('SELECT * FROM `tb_users` a INNER JOIN tb_persons b USING(person_id) WHERE a.user_id = :id', array(':id' => $user_id));
 
         if (count($results) > 0):
+
+            $users = new User();
             $users->setData($results);
+
             return $users->getValues()[0];
+
         else:
             return false;
         endif;
@@ -321,16 +327,81 @@ class User extends Model {
     public static function getUserByLogin($login) {
 
         $login = (string) $login;
-        $users = new User();
 
         $sql = new Sql();
         $results = $sql->select('SELECT * FROM `tb_users` a INNER JOIN tb_persons b USING(person_id) WHERE a.user_login = :login ORDER by b.person_name', array(':login' => $login));
 
         if (count($results) > 0):
+
+            $users = new User();
             $users->setData($results);
+
             return $users->getValues()[0];
+
         else:
             return false;
+        endif;
+    }
+
+    /**
+     * Retorna os dados do usuário pela sessão de login
+     */
+    public static function getUserBySession() {
+
+        //verifica se o usuário esta logado       
+        if (!User::checkSession()):
+
+            return false;
+
+        else:
+
+            if (self::$dataSession != null):
+
+                return self::$dataSession;
+
+            else:
+
+                $sql = new Sql();
+                $results = $sql->select('SELECT * FROM `tb_users` WHERE user_id = :user_id', array(':user_id' => $_SESSION[User::SESSION]['user_id']));
+
+                if (count($results) > 0):
+
+                    $user = new User();
+                    $user->setData($results);
+
+                    self::$dataSession = $user->getValues()[0];
+                    
+                    return self::$dataSession;
+
+                else:
+                    return false;
+                endif;
+                
+            endif;
+
+
+        endif;
+    }
+
+
+    /**
+     * Verifica se existe a sessão de usuário
+     */
+    public static function checkSession( $level = null ) {
+
+        //verifica se existe a sessão
+        if (!empty($_SESSION[User::SESSION]) && (int) $_SESSION[User::SESSION]['user_id'] > 0):
+
+            if ( $level == null || $level >= $_SESSION[User::SESSION]['user_level'] ):
+                return true;
+            else:
+                return false;
+            endif;
+
+        else:
+
+            return false;
+
         endif;
     }
 
@@ -366,14 +437,14 @@ class User extends Model {
     }
 
     public function setPassword($newPassword) {
-        
-        $password = password_hash($newPassword, PASSWORD_DEFAULT);                
+
+        $password = password_hash($newPassword, PASSWORD_DEFAULT);
         $sql = new Sql;
-        
+
         $result = $sql->query('UPDATE tb_users SET user_pass = :pass WHERE user_id = :user_id', array(
             ':pass' => $password,
             ':user_id' => $this->getUser_id()
         ));
     }
-    
+
 }
