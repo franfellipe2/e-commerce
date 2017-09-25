@@ -49,7 +49,7 @@ class Cart extends Model {
 
         else:
 
-            //carrega o carrinho pelo id da sessao
+            //pega pelo id da sessão
             $cart->getBySessionId();
 
             //cria um novo carrinho
@@ -63,14 +63,18 @@ class Cart extends Model {
                 ];
 
                 $cart->setData($data);
-                $cart->save();                
+                $cart->save();
                 $cart->setToSession();
-                
+
             endif;
 
+
+
         endif; //END. verifica se existe a sessão
-    }    
-    
+
+        return $cart;
+    }
+
     public function setToSession() {
         $_SESSION[Cart::SESSION] = $this->getValues();
     }
@@ -86,6 +90,7 @@ class Cart extends Model {
 
         if (count($result) > 0):
             $this->setData($result[0]);
+            return $this->getValues();
         else:
             return false;
         endif;
@@ -96,14 +101,16 @@ class Cart extends Model {
      */
     public function getById($idcart) {
 
-        $cart = new Cart();
         $sql = new Sql();
         $result = $sql->select('SELECT * FROM ' . self::DB_TABLE . ' WHERE idcart = :idcart', array(
             ':idcart' => $idcart
         ));
 
+        var_dump($result);
+
         if (count($result) > 0):
-            $cart->setData($result[0]);
+            $this->setData($result[0]);
+            return $this->getValues();
         else:
             return false;
         endif;
@@ -114,56 +121,80 @@ class Cart extends Model {
      */
     public function save() {
 
-        //if (!empty($this->dataValidate())):
+        $bParams = [
+            ':pidcart' => $this->getIdcart(),
+            ':pdessessionid' => session_id(),
+            ':piduser' => $this->getIduser(),
+            ':pdeszipcode' => $this->getDeszipcode(),
+            ':pvlfreight' => $this->getLfreight(),
+            ':pnrdays' => $this->getNrdays()
+        ];
 
-            $this->slugCreate($this->getDesproduct());
-
-            $bParams = [
-                ':pidcart' => $this->getIdcart(),
-                ':pdessessionid' => session_id(),
-                ':piduser' => $this->getiduser(),
-                ':pdeszipcode' => $this->getdeszipcode(),
-                ':pvlfreight' => $this->getlfreight(),
-                ':pnrdays' => $this->getnrdays()
-            ];
-
-            $params = implode(',', array_keys($bParams));
+        $params = implode(',', array_keys($bParams));
 
 
-            $sql = new Sql;
-            $result = $sql->select("call sp_carts_save({$params})", $bParams);
+        $sql = new Sql;
+        $result = $sql->select("call sp_carts_save({$params})", $bParams);
 
-            if (count($result) > 0):
-                $this->setData($result[0]);
-                return $result[0];
-            else:
-                throw new \Exception('Erro ao cadastrar cadastrar carrinho!');
-            endif;
-
-//        else:
-//
-//            return false;
-//
-//        endif;
+        if (count($result) > 0):
+            $this->setData($result[0]);
+            return $this->getValues();
+        else:
+            throw new \Exception('Erro ao cadastrar cadastrar carrinho!');
+        endif;
     }
 
-    private function dataValidate() {
+    /**
+     * Adicionar produto ao carrinho
+     * @param \Hcode\Models\Products $product
+     */
+    public function addProduct($idproduct) {
 
-        $data = array_map('trim', array_map('strip_tags', filter_input_array(INPUT_POST, FILTER_DEFAULT)));
+        $sql = new Sql();
+        $sql->query('INSERT INTO tb_cartsproducts (idcart, idproduct) Values( :idcart, :idproduct) ', [
+            ':idcart' => $this->getIdcart(),
+            ':idproduct' => $idproduct
+        ]);
+    }
 
-        //Valide Name
-        if (empty($data['desproduct'])) {
-            $this->error['desproduct'] = 'Digite o nome do produto!';
-        } elseif (strlen($data['desproduct']) > 64) {
-            $this->error['desproduct'] = ' Nome muito extenso, digite no máxio 64 caracteres!';
-        }
+    /**
+     * Adicionar produto ao carrinho
+     * @param \Hcode\Models\Products $product
+     */
+    public function removeProduct($idproduct, $all = false) {
 
-        $this->setData($data);
+        $delAll = ( $all === true ? '' : 'LIMIT 1' );
 
-        if ($this->error):
-            return false;
+        $sql = new Sql();
+        $sql->query("
+            UPDATE tb_cartsproducts 
+            SET dtremoved = NOW() 
+            WHERE idcart = :idcart 
+            AND idproduct = :idproduct
+            AND dtremoved IS NULL
+            $delAll", [
+            ':idcart' => $this->getIdcart(),
+            ':idproduct' => $idproduct
+        ]);
+    }
+
+    /**
+     * Lista os produtos do carrinho
+     */
+    public function listProducts() {
+        $sql = new Sql();
+        $result = $sql->select('
+                      select b.desproduct, b.desurl, b.dtregister, b.idproduct,
+                      b.vlheight, b.vllength, b.vlprice, b.vlweight, b.vlwidth, count(*) as nrqtd, SUM(b.vlprice) as vltotal
+                      FROM tb_cartsproducts a 
+                      inner join tb_products b ON a.idproduct = b.idproduct
+                      WHERE a.idcart = :idcart AND a.dtremoved is null
+                      GROUP BY b.idproduct
+                      ORDER BY b.desproduct', [':idcart' => $this->getIdcart()]);
+        if (count($result) > 0):
+            return Products::cheklist($result);
         else:
-            return true;
+            return false;
         endif;
     }
 
