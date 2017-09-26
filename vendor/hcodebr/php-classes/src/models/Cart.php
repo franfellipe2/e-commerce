@@ -10,6 +10,8 @@ class Cart extends Model {
 
     const DB_TABLE = 'tb_carts';
     const SESSION = 'cart';
+    const SESSION_ERROR = 'cartError';
+    const CEP = 38200000;
 
     private $error;
 
@@ -126,7 +128,7 @@ class Cart extends Model {
             ':pdessessionid' => session_id(),
             ':piduser' => $this->getIduser(),
             ':pdeszipcode' => $this->getDeszipcode(),
-            ':pvlfreight' => $this->getLfreight(),
+            ':pvlfreight' => $this->getVlfreight(),
             ':pnrdays' => $this->getNrdays()
         ];
 
@@ -155,6 +157,8 @@ class Cart extends Model {
             ':idcart' => $this->getIdcart(),
             ':idproduct' => $idproduct
         ]);
+
+        $this->updateFreight();
     }
 
     /**
@@ -176,6 +180,8 @@ class Cart extends Model {
             ':idcart' => $this->getIdcart(),
             ':idproduct' => $idproduct
         ]);
+
+        $this->updateFreight();
     }
 
     /**
@@ -195,6 +201,157 @@ class Cart extends Model {
             return Products::cheklist($result);
         else:
             return false;
+        endif;
+    }
+
+    /**
+     * Pega os totais gerais do carrinho como subtotal de preços, frete e total de preços
+     */
+    public function getProductsTotals() {
+
+        $sql = new Sql();
+        $result = $sql->select('
+                                SELECT 
+                                sum(b.vlprice) as subtotal,
+                                sum(b.vllength) as comprimento,
+                                max(b.vlheight) as altura,
+                                sum(b.vlweight) as peso,
+                                sum(b.vlwidth) as largura,
+                                count(*) as nrqtd
+                                FROM tb_cartsproducts a 
+                                inner join tb_products b 
+                                on a.idproduct = b.idproduct
+                                WHERE a.idcart = :idcart
+                                AND dtremoved IS NULL
+            ', array(':idcart' => $this->getIdcart())
+        );
+
+        if (!empty($result[0]['nrqtd'])):
+            return $result[0];
+        else:
+            return [];
+        endif;
+    }
+
+    /**
+     * Calcula o frete
+     */
+    public function setFreight($zipcode) {
+
+        $zipcode = str_replace('-', '', $zipcode);
+        $totals = $this->getProductsTotals();
+
+        if ($totals):
+            $build_query = http_build_query([
+                'nCdEmpresa' => '',
+                'sDsSenha' => '',
+                'nCdServico' => 40010,
+                'sCepOrigem' => self::CEP,
+                'sCepDestino' => (int) $zipcode,
+                'nCdFormato' => 1,
+                'nVlDiametro' => 0,
+                'nVlPeso' => $totals['peso'],
+                'nVlComprimento' => ($totals['comprimento'] < 16 ? 16 : $totals['comprimento'] ),
+                'nVlAltura' => ($totals['altura'] < 2 ? 2 : $totals['altura'] ),
+                'nVlLargura' => $totals['largura'],
+                'nVlValorDeclarado' => $totals['subtotal'],
+                'sCdAvisoRecebimento' => 's',
+                'sCdMaoPropria' => 's',
+                'sDtCalculo' => '',
+            ]);
+
+            $xml = simplexml_load_file("http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx/CalcPrecoPrazo?$build_query");
+            $result = (array) $xml->Servicos->cServico;
+
+            $this->setDeszipcode($zipcode);
+            $this->setVlfreight(Cart::formatValueToDecimal($result['Valor']));
+            $this->setNrdays($result['PrazoEntrega']);
+
+
+            if ($result['MsgErro'] != ''):
+                Cart::setMsgError($result['MsgErro']);
+            endif;
+
+            $this->save();
+
+            return $result;
+
+        else:
+
+            return false;
+
+        endif;
+    }
+
+    /**
+     * Formata um numero para o formato decimal padrão do mysql, ex: 2000.00
+     */
+    public static function formatValueToDecimal($value) {
+        $value = str_replace('.', '', $value);
+        return str_replace(',', '.', $value);
+    }
+
+    /**
+     * Seta mensagens de erros via sessao
+     */
+    public static function setMsgError($msg) {
+        $_SESSION[self::SESSION_ERROR] = $msg;
+    }
+
+    /**
+     * Mostra mensagens de erro via sessão
+     */
+    public static function getMsgError() {
+
+        if (isset($_SESSION[self::SESSION_ERROR])):
+
+            $msg = $_SESSION[self::SESSION_ERROR];
+
+            $_SESSION[Cart::SESSION_ERROR] = null;
+
+            return $msg;
+
+        endif;
+    }
+
+    /**
+     * Atualiza o valor do frete
+     */
+    public function updateFreight() {
+
+        if ($this->getDeszipcode() != ''):
+            $this->setFreight($this->getDeszipcode());        
+        endif;
+    }
+
+    /**
+     * Adiciona o total e subtotal do preço
+     * @return type
+     */
+    public function getValues() {
+
+        $this->getCalculateTotal();
+
+        return parent::getValues();
+    }
+
+    /**
+     * Pega o calculo dos totais do carrinho
+     */
+    public function getCalculateTotal() {
+
+        $result = $this->getProductsTotals();
+        if (!empty($result['subtotal'])):
+            $this->setVlsubtotal($result['subtotal']);
+            $this->setTotal($result['subtotal'] + $this->getVlfreight());
+        else:
+            $this->setVlsubtotal(0);
+            $this->setTotal(0);
+        endif;
+        
+         if ($this->getDeszipcode() == ''):
+            $this->setVlfreight(0);
+            $this->setNrdays(0);
         endif;
     }
 
