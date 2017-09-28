@@ -23,7 +23,7 @@ class User extends Model {
      * @return \Hcode\Models\User
      * @throws \Exception
      */
-    static public function login($userName, $password) {
+    static public function login($userName, $password) {        
 
         $sql = new Sql();
         $result = $sql->select('SELECT * FROM ' . self::tbUser . ' WHERE user_login = :login', array('login' => $userName));
@@ -64,8 +64,8 @@ class User extends Model {
      * @param int $level Nível de permisão do usuário: 1 cliente, 2 editor, 3 administrador
      * @return boolean
      */
-    public static function verifyLogin($level = 1) {
-
+    public static function verifyLogin($level = 1) {        
+                
         if (!isset($_SESSION[self::SESSION])):
             header('location: ' . HOME . '/admin/login/');
             exit;
@@ -370,29 +370,28 @@ class User extends Model {
                     $user->setData($results);
 
                     self::$dataSession = $user->getValues()[0];
-                    
+
                     return self::$dataSession;
 
                 else:
                     return false;
                 endif;
-                
+
             endif;
 
 
         endif;
     }
 
-
     /**
      * Verifica se existe a sessão de usuário
      */
-    public static function checkSession( $level = null ) {
+    public static function checkSession($level = null) {
 
         //verifica se existe a sessão
         if (!empty($_SESSION[User::SESSION]) && (int) $_SESSION[User::SESSION]['user_id'] > 0):
 
-            if ( $level == null || $level >= $_SESSION[User::SESSION]['user_level'] ):
+            if ($level == null || $level >= $_SESSION[User::SESSION]['user_level']):
                 return true;
             else:
                 return false;

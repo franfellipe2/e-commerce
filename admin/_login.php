@@ -1,4 +1,8 @@
 <?php
+if(!isset($_SESSION)):
+    session_start();
+endif;
+
 use Hcode\Page;
 use Hcode\PageAdmin;
 use Hcode\Models\User;
