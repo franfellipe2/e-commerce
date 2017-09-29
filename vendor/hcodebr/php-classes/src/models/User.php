@@ -240,7 +240,7 @@ class User extends Model {
      * Enviar email para recuperação de senha
      * @param string $email
      */
-    public static function sendForgot($email) {
+    public static function sendForgot($email, $inAdmin = true) {
 
         $user = self::getUserByEmail($email);
 
@@ -257,7 +257,12 @@ class User extends Model {
 
                 $encrypt = mcrypt_encrypt(MCRYPT_RIJNDAEL_128, self::SECRET, $resultRecovery[0]['idrecovery'], MCRYPT_MODE_ECB);
                 $code = base64_encode($encrypt);
-                $link = ADMIN_URL . "/forgot/reset?code=$code";
+                
+                if ($inAdmin === true):
+                    $link = ADMIN_URL . "/forgot/reset?code=$code";
+                else:
+                    $link = HOME . "/forgot/reset?code=$code";
+                endif;
 
                 $mailer = new Mailer(
                         $user['person_mail'], $user['person_name'], 'forgot', 'Redefinir senha', array(
@@ -273,7 +278,7 @@ class User extends Model {
         endif;
     }
 
-    public static function validForgotDecrypt($code) {
+    public static function validForgotDecrypt($code, $inAdmin = true) {
 
         $idrecovery = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, self::SECRET, base64_decode($code), MCRYPT_MODE_ECB);
         $sql = new Sql;
@@ -287,7 +292,12 @@ class User extends Model {
         if (count($result) > 0):
             return $result[0];
         else:
-            throw new \Exception('Não foi possível redefiner a senha! O tempo expirou ou a senha já foi alterada. Tente fazer <a href="' . ADMIN_URL . '/login">login</a> ou <a href="' . ADMIN_URL . '/forgot">Redefina a senha novamente!</a>');
+            if ($inAdmin === true):
+                throw new \Exception('Não foi possível redefiner a senha! O tempo expirou ou a senha já foi alterada. Tente fazer <a href="' . ADMIN_URL . '/login">login</a> ou <a href="' . ADMIN_URL . '/forgot">Redefina a senha novamente!</a>');
+            else:
+                throw new \Exception('Não foi possível redefiner a senha! O tempo expirou ou a senha já foi alterada. Tente fazer <a href="' . HOME . '/login">login</a> ou <a href="' . HOME . '/forgot">Redefina a senha novamente!</a>');
+            endif;
+
             return false;
         endif;
     }

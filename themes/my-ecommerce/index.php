@@ -18,6 +18,8 @@ switch ($url[0]):
         require THEME_PATH . DIRECTORY_SEPARATOR . 'login.php';
     case 'checkout':
         require THEME_PATH . DIRECTORY_SEPARATOR . 'checkout.php';
+    case 'forgot':
+        require THEME_PATH . DIRECTORY_SEPARATOR . 'forgot.php';
 endswitch;
 
 

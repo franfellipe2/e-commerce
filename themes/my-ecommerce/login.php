@@ -66,8 +66,14 @@ $app->post('/login/register', function() {
         $tpl = new Page();
         $tpl->setTpl('login-register', array('create' => $_POST, 'errorCreate' => $user->getError()));
     else:
-        $_SESSION['registered'] = "Usuário(a) \"{$_POST['person_name']}\" cadastrado(a) com Sucesso! Entre com seu login e senha.";
-        header('location: ' . HOME . '/login');
+        
+//        $_SESSION['registered'] = "Usuário(a) \"{$_POST['person_name']}\" cadastrado(a) com Sucesso! Entre com seu login e senha.";
+//        header('location: ' . HOME . '/login');
+
+        $user->login($_POST['user_login'], $_POST['user_pass']);
+    
+        header('location: ' . HOME . '/checkout');
         exit;
+        
     endif;
 });
