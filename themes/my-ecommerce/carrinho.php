@@ -1,7 +1,4 @@
 <?php
-
-unset($_SESSION);
-
 use Hcode\Page;
 use Hcode\Models\Cart;
 use Hcode\Models\User;

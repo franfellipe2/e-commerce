@@ -3,6 +3,7 @@
 namespace Hcode;
 
 use Rain\Tpl;
+use Hcode\Models\User;
 
 class Page {
 
@@ -17,7 +18,7 @@ class Page {
     private $defaults = [
         'HOME' => HOME,
         'ADMIN_URL' => ADMIN_URL,
-        'THEME_URL' => THEME_URL,        
+        'THEME_URL' => THEME_URL,
         'header' => true,
         'footer' => true
     ];
@@ -29,13 +30,16 @@ class Page {
         // config
         $this->setConfig(array('debug' => $debug));
         Tpl::configure($this->config);
+
         $this->tpl = new Tpl;
 
-        //Datas
+        //Datas Defaults
         $this->setData($this->options);
 
         //Show Header
-        if($this->options['header'] === true ) $this->tpl->draw('header');
+        if ($this->options['header'] === true) {
+            $this->setTpl('header', ['userLogin' => User::getUserBySession()]);
+        }
     }
 
     //======================================
@@ -47,7 +51,8 @@ class Page {
     }
 
     public function __destruct() {
-        if($this->options['footer'] === true ) $this->tpl->draw('footer');
+        if ($this->options['footer'] === true)
+            $this->tpl->draw('footer');
     }
 
     public function setConfig(array $arrConfig) {

@@ -23,7 +23,7 @@ class User extends Model {
      * @return \Hcode\Models\User
      * @throws \Exception
      */
-    static public function login($userName, $password) {        
+    static public function login($userName, $password) {
 
         $sql = new Sql();
         $result = $sql->select('SELECT * FROM ' . self::tbUser . ' WHERE user_login = :login', array('login' => $userName));
@@ -64,8 +64,8 @@ class User extends Model {
      * @param int $level Nível de permisão do usuário: 1 cliente, 2 editor, 3 administrador
      * @return boolean
      */
-    public static function verifyLogin($level = 1) {        
-                
+    public static function verifyLogin($level = 1) {
+
         if (!isset($_SESSION[self::SESSION])):
             header('location: ' . HOME . '/admin/login/');
             exit;
@@ -92,9 +92,9 @@ class User extends Model {
     /**
      * Desloga o usuário do sistema
      */
-    public static function logout() {
+    public static function logout($urlRoute = '/admin/login') {
         $_SESSION[self::SESSION] = null;
-        header('location: ' . HOME . '/admin/login');
+        header('location: ' . HOME . $urlRoute);
         exit;
     }
 
@@ -362,7 +362,7 @@ class User extends Model {
             else:
 
                 $sql = new Sql();
-                $results = $sql->select('SELECT * FROM `tb_users` WHERE user_id = :user_id', array(':user_id' => $_SESSION[User::SESSION]['user_id']));
+                $results = $sql->select('SELECT * FROM `tb_users` a INNER JOIN tb_persons b USING(person_id) WHERE user_id = :user_id', array(':user_id' => $_SESSION[User::SESSION]['user_id']));
 
                 if (count($results) > 0):
 

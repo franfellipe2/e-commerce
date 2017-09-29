@@ -108,8 +108,6 @@ class Cart extends Model {
             ':idcart' => $idcart
         ));
 
-        var_dump($result);
-
         if (count($result) > 0):
             $this->setData($result[0]);
             return $this->getValues();

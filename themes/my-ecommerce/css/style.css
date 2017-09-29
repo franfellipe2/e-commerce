@@ -1123,7 +1123,7 @@ div.cart-collaterals ul.products li.product:hover .add_to_cart_button{background
     display: block;
     margin-bottom: 5px;
 }
-#register-form-wrap input[type="text"], #register-form-wrap input[type="email"], #register-form-wrap input[type="password"] {
+#register-form-wrap input[type="text"], #register-form-wrap input[type="email"], #register-form-wrap input[type="password"],#register-form-wrap input[type="tel"] {
     margin-bottom: 10px;
     width: 250px;
 }
