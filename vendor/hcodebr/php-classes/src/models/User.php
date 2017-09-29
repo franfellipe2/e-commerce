@@ -124,7 +124,7 @@ class User extends Model {
         endif;
     }
 
-    public function update() {
+    public function update($noValidates = '') {
 
         //Dados que não serão validados
         $noValidates = array('user_pass');

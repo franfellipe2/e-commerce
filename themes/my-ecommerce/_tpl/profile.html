@@ -1,0 +1,51 @@
+
+<div class="product-big-title-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="product-bit-title text-center">
+                    <h2>Minha Conta</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="single-product-area">
+    <div class="zigzag-bottom"></div>
+    <div class="container">
+        <div class="row">                
+            <div class="col-md-3">
+                {include="profile-menu"}
+            </div>
+            <div class="col-md-9">
+                {if="$profileMsg != ''"}
+                <div class="alert alert-success">
+                    {$profileMsg}
+                </div>
+                {/if}               
+                <form method="post" action="{$HOME}/profile">
+                    <div class='form-group {if="!empty($error.person_name)"}has-warning{/if}'>
+                        <label for="person_name">Nome Completo  <span class="required">*</span></label>
+                        <input type="text" class="form-control" id="person_name" name="person_name" placeholder="Digite o nome" {if="!empty($user.person_name)"}value="{$user.person_name}"{/if}>
+                               <span class="help-block">{if="!empty($error.person_name)"}{$error.person_name}{/if}</span>
+                    </div>
+                    <div class='form-group {if="!empty($error.user_login)"}has-warning{/if}'>
+                        <label for="user_login">Login  <span class="required">*</span></label>
+                        <input type="text" class="form-control" id="user_login" name="user_login" placeholder="Digite o login" {if="!empty($user.user_login)"}value="{$user.user_login}"{/if}>
+                               <span class="help-block">{if="!empty($error.user_login)"}{$error.user_login}{/if}</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="person_mail">E-mail  <span class="required">*</span></label>
+                        <input type="email" class="form-control" id="person_mail" name="person_mail" placeholder="Digite o e-mail" {if="!empty($user.person_mail)"}value="{$user.person_mail}"{/if} required="required">
+                    </div>
+                    <div class="form-group">
+                        <label for="person_phone">Telefone</label>
+                        <input type="tel" class="form-control" id="person_phone" name="person_phone" placeholder="Digite o telefone" {if="!empty($user.person_phone)"}value="{$user.person_phone}"{/if}>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
