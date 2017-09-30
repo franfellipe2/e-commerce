@@ -257,7 +257,7 @@ class User extends Model {
 
                 $encrypt = mcrypt_encrypt(MCRYPT_RIJNDAEL_128, self::SECRET, $resultRecovery[0]['idrecovery'], MCRYPT_MODE_ECB);
                 $code = base64_encode($encrypt);
-                
+
                 if ($inAdmin === true):
                     $link = ADMIN_URL . "/forgot/reset?code=$code";
                 else:
@@ -454,6 +454,13 @@ class User extends Model {
             ':pass' => $password,
             ':user_id' => $this->getUser_id()
         ));
+    }
+
+    public static function getUserIdBySession() {
+        
+        if (User::checkSession()):
+            return $_SESSION[User::SESSION]['user_id'];
+        endif;
     }
 
 }

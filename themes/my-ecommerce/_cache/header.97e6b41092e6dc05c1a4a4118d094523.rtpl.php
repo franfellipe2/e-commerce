@@ -44,7 +44,7 @@
                             <li><a href="<?php echo htmlspecialchars( $HOME, ENT_COMPAT, 'UTF-8', FALSE ); ?>/login"><i class="fa fa-lock"></i> Login</a></li>
                             <?php }else{ ?>
 
-                            <li><a href="<?php echo htmlspecialchars( $HOME, ENT_COMPAT, 'UTF-8', FALSE ); ?>/login"><i class="fa fa-user"></i> Olá, <?php echo htmlspecialchars( $userLogin["person_name"], ENT_COMPAT, 'UTF-8', FALSE ); ?></a></li>
+                            <li><a href="<?php echo htmlspecialchars( $HOME, ENT_COMPAT, 'UTF-8', FALSE ); ?>/profile"><i class="fa fa-user"></i> Olá, <?php echo htmlspecialchars( $userLogin["person_name"], ENT_COMPAT, 'UTF-8', FALSE ); ?></a></li>
                             <li><a href="<?php echo htmlspecialchars( $HOME, ENT_COMPAT, 'UTF-8', FALSE ); ?>/login/logout"><i class="fa fa-close"></i> Logout</a></li>
                             <?php } ?>
 

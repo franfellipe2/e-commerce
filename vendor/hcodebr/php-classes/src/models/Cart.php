@@ -125,7 +125,7 @@ class Cart extends Model {
             ':pidcart' => $this->getIdcart(),
             ':pdessessionid' => session_id(),
             ':piduser' => $this->getIduser(),
-            ':pdeszipcode' => $this->getDeszipcode(),
+            ':pdeszipcode' => str_replace('-', '', $this->getDeszipcode()),
             ':pvlfreight' => $this->getVlfreight(),
             ':pnrdays' => $this->getNrdays()
         ];
@@ -318,7 +318,7 @@ class Cart extends Model {
     public function updateFreight() {
 
         if ($this->getDeszipcode() != ''):
-            $this->setFreight($this->getDeszipcode());        
+            $this->setFreight($this->getDeszipcode());
         endif;
     }
 
@@ -346,8 +346,8 @@ class Cart extends Model {
             $this->setVlsubtotal(0);
             $this->setTotal(0);
         endif;
-        
-         if ($this->getDeszipcode() == ''):
+
+        if ($this->getDeszipcode() == ''):
             $this->setVlfreight(0);
             $this->setNrdays(0);
         endif;
