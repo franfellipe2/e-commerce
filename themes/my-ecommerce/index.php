@@ -22,6 +22,8 @@ switch ($url[0]):
         require THEME_PATH . DIRECTORY_SEPARATOR . 'forgot.php';
     case 'profile':
         require THEME_PATH . DIRECTORY_SEPARATOR . 'profile.php';
+    case 'order':
+        require THEME_PATH . DIRECTORY_SEPARATOR . 'order.php';
 endswitch;
 
 

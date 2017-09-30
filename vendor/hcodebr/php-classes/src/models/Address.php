@@ -77,11 +77,16 @@ class Address extends Model {
             ':descountry' => utf8_decode($this->getdescountry()),
             ':deszipcode' => $this->getdeszipcode(),
             ':desdistrict' => utf8_decode($this->getdesdistrict())
-        ];       
+        ];
 
 
         $sql = new Sql();
-        $result = $sql->select('Call sp_addresses_save( :idaddress, :idperson , :desaddress, :descomplement, :descity, :desstate, :descountry, :deszipcode, :desdistrict )', $data);        
+        $result = $sql->select('Call sp_addresses_save( :idaddress, :idperson , :desaddress, :descomplement, :descity, :desstate, :descountry, :deszipcode, :desdistrict )', $data);
+
+        if (count($result) > 0):
+            $this->setData($result[0]);
+            return $result[0];
+        endif;
     }
 
     public function getError() {

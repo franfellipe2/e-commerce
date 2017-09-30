@@ -4,6 +4,8 @@ use Hcode\Page;
 use Hcode\Models\User;
 use Hcode\Models\Cart;
 use Hcode\Models\Address;
+use Hcode\Models\Order;
+use Hcode\Models\Ordersstatus;
 
 //CHECA e/ou completa os DADOS PARA O ENVIO DOs PRODUTOs
 $app->get('/checkout', function() {
@@ -50,10 +52,20 @@ $app->post('/checkout', function() {
     $address->setData($_POST);
     $address->save();
 
-    //Se não der erro envio para a pagina de pagamento
+    //Se não der erro envia para a pagina de pagamento
     if (!$address->getError()):
 
-        header('location: ' . HOME . '/order');
+        $order = new Order;
+        $order->setData([
+            'idcart' => $cart->getIdcart(),
+            'iduser' => User::getUserIdBySession(),
+            'idstatus' => Ordersstatus::EM_ABERTO,
+            'idaddress' => $address->getIdaddress(),
+            'vltotal' => $cart->getTotal()
+        ]);        
+        $order->save();
+        
+        header('location: ' . HOME . '/order/' . $order->getIdorder());
         exit;
 
     else:
