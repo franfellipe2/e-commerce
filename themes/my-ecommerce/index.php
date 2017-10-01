@@ -16,14 +16,22 @@ switch ($url[0]):
         break;
     case 'login':
         require THEME_PATH . DIRECTORY_SEPARATOR . 'login.php';
+        break;
     case 'checkout':
         require THEME_PATH . DIRECTORY_SEPARATOR . 'checkout.php';
+        break;
     case 'forgot':
         require THEME_PATH . DIRECTORY_SEPARATOR . 'forgot.php';
+        break;
     case 'profile':
         require THEME_PATH . DIRECTORY_SEPARATOR . 'profile.php';
+        break;
+    case 'profile-orders':
+        require THEME_PATH . DIRECTORY_SEPARATOR . 'profile-orders.php';
+        break;
     case 'order':
         require THEME_PATH . DIRECTORY_SEPARATOR . 'order.php';
+        break;
 endswitch;
 
 

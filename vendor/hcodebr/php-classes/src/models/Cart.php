@@ -157,6 +157,7 @@ class Cart extends Model {
         ]);
 
         $this->updateFreight();
+        $this->resetTotalsInSession();
     }
 
     /**
@@ -180,13 +181,18 @@ class Cart extends Model {
         ]);
 
         $this->updateFreight();
+        $this->resetTotalsInSession();
     }
 
     /**
      * Lista os produtos do carrinho
      */
-    public function listProducts() {
+    public function listProducts($idcart = null) {
+
+        $idcart = ($idcart ? (int) $idcart : $this->getIdcart());
+
         $sql = new Sql();
+
         $result = $sql->select('
                       select b.desproduct, b.desurl, b.dtregister, b.idproduct,
                       b.vlheight, b.vllength, b.vlprice, b.vlweight, b.vlwidth, count(*) as nrqtd, SUM(b.vlprice) as vltotal
@@ -194,7 +200,7 @@ class Cart extends Model {
                       inner join tb_products b ON a.idproduct = b.idproduct
                       WHERE a.idcart = :idcart AND a.dtremoved is null
                       GROUP BY b.idproduct
-                      ORDER BY b.desproduct', [':idcart' => $this->getIdcart()]);
+                      ORDER BY b.desproduct', [':idcart' => $idcart]);
         if (count($result) > 0):
             return Products::cheklist($result);
         else:
@@ -203,9 +209,22 @@ class Cart extends Model {
     }
 
     /**
+     * Reseta os dados dos totais do carrinho na sessão do carrinho como subtotal de preços, frete e total de preços
+     */
+    public function resetTotalsInSession() {
+        if (isset($_SESSION[Cart::SESSION]['totals'])):
+            $_SESSION[Cart::SESSION]['totals'] = null;
+        endif;
+    }
+
+    /**
      * Pega os totais gerais do carrinho como subtotal de preços, frete e total de preços
      */
     public function getProductsTotals() {
+        
+        if (isset($_SESSION[Cart::SESSION]['totals'])):            
+            return $_SESSION[Cart::SESSION]['totals'];
+        endif;
 
         $sql = new Sql();
         $result = $sql->select('
@@ -225,7 +244,10 @@ class Cart extends Model {
         );
 
         if (!empty($result[0]['nrqtd'])):
+            $_SESSION[Cart::SESSION]['totals'] = $result[0];
+            $_SESSION[Cart::SESSION] = array_merge($_SESSION[Cart::SESSION], $result[0]);
             return $result[0];
+
         else:
             return [];
         endif;

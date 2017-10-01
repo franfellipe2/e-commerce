@@ -64,14 +64,28 @@ class User extends Model {
      * @param int $level Nível de permisão do usuário: 1 cliente, 2 editor, 3 administrador
      * @return boolean
      */
-    public static function verifyLogin($level = 1) {
+    public static function verifyLogin($level = 1, $inAdmin = true) {
 
         if (!isset($_SESSION[self::SESSION])):
-            header('location: ' . HOME . '/admin/login/');
-            exit;
+
+            if ($inAdmin):
+                header('location: ' . HOME . '/admin/login/');
+                exit;
+            else:
+                header('location: ' . HOME . '/login/');
+                exit;
+            endif;
+
         elseif ($_SESSION[self::SESSION]['user_id'] <= 0 || $_SESSION[self::SESSION]['user_level'] < $level):
-            header('location: ' . HOME . '/admin/login/?access=denied');
-            exit;
+
+            if ($inAdmin):
+                header('location: ' . HOME . '/admin/login/');
+                exit;
+            else:
+                header('location: ' . HOME . '/login/');
+                exit;
+            endif;
+
         else:
             return true;
         endif;
@@ -457,10 +471,32 @@ class User extends Model {
     }
 
     public static function getUserIdBySession() {
-        
+
         if (User::checkSession()):
             return $_SESSION[User::SESSION]['user_id'];
         endif;
+    }
+
+    /**
+     * Lista as orderns de pagamentos (compras realizadas pelo usuário)
+     */
+    public function getOrders() {
+        
+        $sql = new Sql();
+
+        $result = $sql->select('SELECT * 
+                    FROM tb_orders a
+                    INNER JOIN tb_ordersstatus b USING(idstatus)
+                    INNER JOIN tb_carts c USING(idcart)
+                    INNER JOIN tb_users d ON d.user_id = a.iduser
+                    INNER JOIN tb_addresses e USING(idaddress)
+                    WHERE d.user_id = :iduser', [':iduser' => User::getUserIdBySession()]
+        );
+
+        if (count($result) > 0):            
+            return $result;
+        endif;
+        
     }
 
 }
