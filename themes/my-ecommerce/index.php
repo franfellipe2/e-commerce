@@ -1,5 +1,7 @@
 <?php
+
 $url[0] = (!empty($url[0]) ? $url[0] : '' );
+$url[1] = (!empty($url[1]) ? $url[1] : '' );
 
 switch ($url[0]):
     case '':
@@ -24,8 +26,17 @@ switch ($url[0]):
         require THEME_PATH . DIRECTORY_SEPARATOR . 'forgot.php';
         break;
     case 'profile':
-        require THEME_PATH . DIRECTORY_SEPARATOR . 'profile.php';
+
+        switch ($url[1]):
+            case '':
+                require THEME_PATH . DIRECTORY_SEPARATOR . 'profile.php';
+                break;
+            case 'change-password':
+                require THEME_PATH . DIRECTORY_SEPARATOR . 'profile-change-password.php';
+                break;
+        endswitch;
         break;
+
     case 'profile-orders':
         require THEME_PATH . DIRECTORY_SEPARATOR . 'profile-orders.php';
         break;

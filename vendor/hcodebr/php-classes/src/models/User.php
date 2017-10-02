@@ -9,6 +9,8 @@ use \Hcode\Mailer;
 class User extends Model {
 
     const SESSION = 'User';
+    const SESSION_MSG_SUCESS = 'msg_sucess';
+    const SESSION_MSG_ERROR = 'msg_error';
     const SECRET = '55330009701803289326473643785709';
     //Tabela do usuario no banco de dados
     const tbUser = 'tb_users';
@@ -459,15 +461,25 @@ class User extends Model {
         return $this->error;
     }
 
-    public function setPassword($newPassword) {
+    /**
+     * Altera a senha no baco de dados
+     * @param type $newPassword
+     */
+    public function updatePassword($newPassword) {
 
-        $password = password_hash($newPassword, PASSWORD_DEFAULT);
+        $password = self::passwordHash($newPassword);
+
         $sql = new Sql;
 
-        $result = $sql->query('UPDATE tb_users SET user_pass = :pass WHERE user_id = :user_id', array(
+        $sql->query('UPDATE tb_users SET user_pass = :pass WHERE user_id = :user_id', array(
             ':pass' => $password,
             ':user_id' => $this->getUser_id()
         ));
+    }
+
+    public static function passwordHash($password) {
+
+        return password_hash($password, PASSWORD_DEFAULT);
     }
 
     public static function getUserIdBySession() {
@@ -481,7 +493,7 @@ class User extends Model {
      * Lista as orderns de pagamentos (compras realizadas pelo usuário)
      */
     public function getOrders() {
-        
+
         $sql = new Sql();
 
         $result = $sql->select('SELECT * 
@@ -493,10 +505,58 @@ class User extends Model {
                     WHERE d.user_id = :iduser', [':iduser' => User::getUserIdBySession()]
         );
 
-        if (count($result) > 0):            
+        if (count($result) > 0):
             return $result;
         endif;
-        
+    }
+
+    /**
+     * Registra mensagens de sucesso
+     * @param string $msg
+     */
+    public static function setMsgSucess($msg) {
+        $_SESSION[User::SESSION_MSG_SUCESS] = $msg;
+    }
+
+    /**
+     * Retorna mensagens de sucesso registradas pelo metodo setMsgSucess($msg)
+     * @return string
+     */
+    public static function getMsgSucess() {
+
+        if (!empty($_SESSION[User::SESSION_MSG_SUCESS])):
+
+            $msg = $_SESSION[User::SESSION_MSG_SUCESS];
+            $_SESSION[User::SESSION_MSG_SUCESS] = null;
+
+            return $msg;
+
+        endif;
+    }
+
+    /**
+     * Registra mensagens de Erro
+     * @param string $msg
+     */
+    public static function setMsgError($msg) {
+
+        $_SESSION[User::SESSION_MSG_SUCESS] = $msg;
+    }
+
+    /**
+     * Retorna mensagens de Erro registradas pelo metodo setMsgError($msg)
+     * @return string
+     */
+    public static function getMsgError() {
+
+        if (!empty($_SESSION[User::SESSION_MSG_ERROR])):
+
+            $msg = $_SESSION[User::SESSION_MSG_ERROR];
+            $_SESSION[User::SESSION_MSG_ERROR] = null;
+
+            return $msg;
+
+        endif;
     }
 
 }

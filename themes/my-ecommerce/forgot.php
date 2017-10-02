@@ -48,7 +48,7 @@ $app->post('/forgot/reset', function() {
 
         $user = new User();
         $user->setUser_id($userForgot['user_id']);
-        $user->setPassword($_POST['password']);
+        $user->updatePassword($_POST['password']);
 
         $tpl = new Page();
 
