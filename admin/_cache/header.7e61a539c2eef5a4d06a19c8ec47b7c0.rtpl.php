@@ -260,6 +260,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <li class="active"><a href="<?php echo htmlspecialchars( $ADMIN_URL, ENT_COMPAT, 'UTF-8', FALSE ); ?>/users/"><i class="fa fa-users"></i> <span>Usuários</span></a></li>
                         <li><a href="<?php echo htmlspecialchars( $ADMIN_URL, ENT_COMPAT, 'UTF-8', FALSE ); ?>/categories/"><i class="fa fa-folder"></i> <span>Categorias</span></a></li>
                         <li><a href="<?php echo htmlspecialchars( $ADMIN_URL, ENT_COMPAT, 'UTF-8', FALSE ); ?>/products/"><i class="fa fa-cart-plus"></i> <span>Produtos</span></a></li>
+                        <li><a href="<?php echo htmlspecialchars( $ADMIN_URL, ENT_COMPAT, 'UTF-8', FALSE ); ?>/orders"><i class="fa fa-truck"></i> <span>Pedidos</span></a></li>
                         <li class="treeview">
                             <a href="#"><i class="fa fa-link"></i> <span>Multilevel</span>
                                 <span class="pull-right-container">

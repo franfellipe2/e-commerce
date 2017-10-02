@@ -24,7 +24,7 @@ class Address extends Model {
 
         if (!empty($this->data['logradouro'])):
 
-            $this->setData([
+            $data = [
                 'idaddress' => $this->getIdaddress(),
                 'idperson' => User::getUserIdBySession(),
                 'desaddress' => $this->data['logradouro'],
@@ -34,10 +34,9 @@ class Address extends Model {
                 'descountry' => 'brasil',
                 'deszipcode' => $this->data['cep'],
                 'desdistrict' => $this->data['bairro']
-            ]);
-
-            unset($this->data);
-
+            ];
+        
+            $this->setData($data);
             return $this->getValues();
 
         else:

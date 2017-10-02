@@ -35,6 +35,7 @@ $app->get('/checkout', function() {
         'address' => $address->getValues(),
         'products' => $cart->listProducts()
     ]);
+    
 });
 
 
@@ -63,7 +64,8 @@ $app->post('/checkout', function() {
             'idaddress' => $address->getIdaddress(),
             'vltotal' => $cart->getTotal()
         ]);        
-        $order->save();
+        
+        $order->save();        
         
         header('location: ' . HOME . '/order/' . $order->getIdorder());
         exit;

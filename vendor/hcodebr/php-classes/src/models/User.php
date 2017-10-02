@@ -526,12 +526,16 @@ class User extends Model {
 
         if (!empty($_SESSION[User::SESSION_MSG_SUCESS])):
 
-            $msg = $_SESSION[User::SESSION_MSG_SUCESS];
-            $_SESSION[User::SESSION_MSG_SUCESS] = null;
-
+            $msg = $_SESSION[User::SESSION_MSG_SUCESS];           
+            self::clearMsgSucess();
+            
             return $msg;
 
         endif;
+    }
+    
+    public static function clearMsgSucess() {
+        $_SESSION[User::SESSION_MSG_SUCESS] = null;
     }
 
     /**
@@ -542,7 +546,7 @@ class User extends Model {
 
         $_SESSION[User::SESSION_MSG_SUCESS] = $msg;
     }
-
+    
     /**
      * Retorna mensagens de Erro registradas pelo metodo setMsgError($msg)
      * @return string
@@ -552,11 +556,15 @@ class User extends Model {
         if (!empty($_SESSION[User::SESSION_MSG_ERROR])):
 
             $msg = $_SESSION[User::SESSION_MSG_ERROR];
-            $_SESSION[User::SESSION_MSG_ERROR] = null;
+             self::clearMsgError();
 
             return $msg;
 
         endif;
+    }
+    
+     public static function clearMsgError() {
+        $_SESSION[User::SESSION_MSG_ERROR] = null;
     }
 
 }

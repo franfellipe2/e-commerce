@@ -40,3 +40,7 @@ function getCartNrqtd() {
         return $totlas['nrqtd'];
     endif;
 }
+
+function format_date($date){
+    return date('d/m/Y H:i:s', strtotime($date));
+}
