@@ -251,51 +251,15 @@ class User extends Model {
             return false;
         endif;
     }
-
-    /**
-     * Faz uma busca por usuário com paginação
-     * @param string $search
-     * @param int $limit
-     * @return boolean/array
-     */
-    public static function searhcWithPage($search, $nrPage, $limit = 8) {
-
-        $start = (isset($nrPage) && $nrPage > 0 ? $nrPage - 1 : 0 );
-
-        $users = new User();
-        $sql = new Sql();
-
-        $results = $sql->select('SELECT sql_calc_found_rows * 
-                                 FROM `tb_users` a INNER JOIN tb_persons b USING(person_id) 
-                                 WHERE b.person_name LIKE :s OR a.user_login LIKE :s OR b.person_mail LIKE :s
-                                 ORDER by b.person_name ASC
-                                 LIMIT :limit OFFSET :offset
-                                 ', [
-            ':s' => "%$search%",
-            ':limit' => (int)$limit,
-            ':offset' => (int)$start
-        ]);
-
-        $total = $sql->select('select found_rows() as nrtotal');
-
-        if (count($results) > 0):
-            return [
-                'data' => $results,
-                'total' => $total[0]['nrtotal']
-            ];
-        else:
-            return false;
-        endif;
-    }
     
-   /**
+    /**
     * Mostra Todos os usuários utilizando paginação
     * @param int $limit
     * @return boolean/array
     */
-    public static function listAllWithPage($nrPage, $limit = 8) {
+    public static function listAllWithPage($currentPage, $limit = 8) {
 
-        $start = (isset($nrPage) && $nrPage > 0 ? $nrPage - 1 : 0 );
+        $start = (int)(isset($currentPage) && $currentPage > 0 ? $currentPage - 1 : 0 );
 
         $users = new User();
         $sql = new Sql();
@@ -321,6 +285,41 @@ class User extends Model {
         endif;
     }
 
+    /**
+     * Faz uma busca por usuário com paginação
+     * @param string $search
+     * @param int $limit
+     * @return boolean/array
+     */
+    public static function searhcWithPage($search, $currentPage, $limit = 8) {
+
+        $start = (isset($currentPage) && $currentPage > 0 ? $currentPage - 1 : 0 );
+
+        $users = new User();
+        $sql = new Sql();
+
+        $results = $sql->select('SELECT sql_calc_found_rows * 
+                                 FROM `tb_users` a INNER JOIN tb_persons b USING(person_id) 
+                                 WHERE b.person_name LIKE :s OR a.user_login LIKE :s OR b.person_mail LIKE :s
+                                 ORDER by b.person_name ASC
+                                 LIMIT :limit OFFSET :offset
+                                 ', [
+            ':s' => "%$search%",
+            ':limit' => (int)$limit,
+            ':offset' => (int)$start
+        ]);
+
+        $total = $sql->select('SELECT found_rows() as nrtotal');
+
+        if (count($results) > 0):
+            return [
+                'data' => $results,
+                'total' => $total[0]['nrtotal']
+            ];
+        else:
+            return false;
+        endif;
+    }
     /**
      * Enviar email para recuperação de senha
      * @param string $email

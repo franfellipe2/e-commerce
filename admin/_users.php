@@ -19,6 +19,7 @@ $app->get('/admin/users/', function() {
 
     $search = '';
 
+    //resultados com busca
     if (!empty($_GET['search'])):
 
         $search = $_GET['search'];
@@ -28,20 +29,16 @@ $app->get('/admin/users/', function() {
 
         $users = User::searhcWithPage($search, $currentPage, $limit);
 
-        // Monta a paginação
-        $numberRegisters = $users['total'];
-        $pagination = new Pagination($link, $numberRegisters, $currentPage, $limit, $maxLinks);
-
     else:
 
+        //resultados sem busca
         $users = User::listAllWithPage($currentPage, $limit);
-        
-        // Monta a paginação
-        $numberRegisters = $users['total'];
-        $pagination = new Pagination($link, $numberRegisters, $currentPage, $limit, $maxLinks);
 
     endif;
-    
+
+    // Monta a paginação
+    $numberRegisters = $users['total'];
+    $pagination = new Pagination($link, $numberRegisters, $currentPage, $limit, $maxLinks);
 
     $tpl = new PageAdmin();
 
@@ -52,8 +49,8 @@ $app->get('/admin/users/', function() {
         'pages' => $pagination->getLinksNavigation(),
         'currentpage' => $currentPage,
         'totalpages' => $pagination->getTotalPages(),
-        'firstLink' => $link.'1',
-        'endLink' => $link.$pagination->getTotalPages()
+        'firstLink' => $link . '1',
+        'endLink' => $link . $pagination->getTotalPages()
     ));
 });
 

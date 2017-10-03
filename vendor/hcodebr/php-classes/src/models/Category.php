@@ -13,8 +13,8 @@ class Category extends Model {
     private $error;
 
     /**
-     * Lista todos os usuarios do sistema
-     * @return array-or-false
+     * Lista todos as categorias do sistema
+     * @return array/false
      */
     public static function listAll() {
 
@@ -25,6 +25,65 @@ class Category extends Model {
         if (count($results) > 0):
             $categories->setData($results);
             return $categories->getValues();
+        else:
+            return false;
+        endif;
+    }
+
+    /**
+     * Lista todos as categorias do sistema com paginação
+     * @return array/false
+     */
+    public static function listAllWithPage($currentPage, $limit) {
+
+        $start = (isset($currentPage) && $currentPage > 0 ? (int) $currentPage - 1 : 0 );
+
+        $categories = new Category();
+        $sql = new Sql();
+        $results = $sql->select('SELECT sql_calc_found_rows * FROM ' . self::DB_TABLE . ' ORDER BY descategory ASC LIMIT :limit OFFSET :offset', [
+            ':limit' => (int) $limit,
+            ':offset' => (int) $start
+        ]);
+
+        $total = $sql->select('select found_rows() as nrtotal');
+
+        if (count($results) > 0):
+            return [
+                'data' => $results,
+                'total' => $total[0]['nrtotal']
+            ];
+        else:
+            return false;
+        endif;
+    }
+
+    /**
+     * Lista todos as categorias do sistema com paginação
+     * @return array/false
+     */
+    public static function searchWithPage($search, $currentPage, $limit) {
+
+        $start = (isset($currentPage) && $currentPage > 0 ? (int) $currentPage - 1 : 0 );
+
+        $categories = new Category();
+        $sql = new Sql();
+        $results = $sql->select('
+                SELECT sql_calc_found_rows * 
+                FROM ' . self::DB_TABLE . '
+                WHERE descategory LIKE :s 
+                LIMIT :limit OFFSET :offset', [
+            ':s' => "%$search%",
+            ':limit' => (int) $limit,
+            ':offset' => (int) $start
+        ]);
+
+        $total = $sql->select('select found_rows() as nrtotal');
+
+        if (count($results) > 0):
+            return [
+                'data' => $results,
+                'total' => $total[0]['nrtotal']
+            ];
         else:
             return false;
         endif;
@@ -175,7 +234,7 @@ class Category extends Model {
     public function getProductsPage(int $page, int $limit) {
 
         $start = (isset($_GET['page']) ? $_GET['page'] - 1 : 0 );
-        
+
         $sql = new Sql();
         $products = $sql->select(
                 'SELECT sql_calc_found_rows * FROM  tb_products a
@@ -188,11 +247,11 @@ class Category extends Model {
             ':offset' => $start
                 ]
         );
-        
+
         $totalProducts = $sql->select('select found_rows() as nrtotal');
-        
+
         return [
-            'data'  => Products::cheklist($products),
+            'data' => Products::cheklist($products),
             'total' => $totalProducts[0]['nrtotal']
         ];
     }

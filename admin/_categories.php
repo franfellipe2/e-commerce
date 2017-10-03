@@ -1,8 +1,10 @@
 <?php
+
 use Hcode\Page;
 use Hcode\PageAdmin;
 use Hcode\Models\User;
 use Hcode\Models\Category;
+use Hcode\Models\Pagination;
 
 // ---------------------------------------
 // ADMIN > CATEGORIAS
@@ -12,9 +14,42 @@ $app->get('/admin/categories/', function() {
 
     User::verifyLogin(3);
 
-    $tpl = new PageAdmin();
+    //configura a paginação        
+    $currentPage = (isset($_GET['page']) && $_GET['page'] > 0 ? $_GET['page'] : 1);
+    $limit = 4;
+    $maxLinks = 8;
+    $link = ADMIN_URL . '/categories/?page=';
+
+    $search = '';
+    if (!empty($_GET['search'])):
+
+        $search = $_GET['search'];
+
+        //altera o link da paginação
+        $link = ADMIN_URL . '/categories/?search=' . $search . '&page=';
+
+        $categories = Category::searchWithPage($search, $currentPage, $limit);
+        
+    else:
+
+        $categories = Category::listAllWithPage($currentPage, $limit);
+
+    endif;
+
+    // Monta a paginação
+    $numberRegisters = $categories['total'];
+    $pagination = new Pagination($link, $numberRegisters, $currentPage, $limit, $maxLinks);
+
+    $tpl = new PageAdmin;
+
     $tpl->setTpl('categories', array(
-        'categories' => Category::listAll()
+        'categories' => $categories['data'],
+        'search' => $search,
+        'pages' => $pagination->getLinksNavigation(),
+        'currentpage' => $currentPage,
+        'totalpages' => $pagination->getTotalPages(),
+        'firstLink' => $link . '1',
+        'endLink' => $link . $pagination->getTotalPages()
     ));
 });
 
