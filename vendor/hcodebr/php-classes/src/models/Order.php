@@ -26,13 +26,15 @@ class Order extends Model {
             ':vltotal' => $this->getVltotal()
         ];
 
-        
+
         $sql = new Sql();
         $result = $sql->select('CALL sp_orders_save(:idorder, :idcart, :iduser, :idstatus, :idaddress, :vltotal)', $data);
 
         if (count($result) > 0):
             $this->setData($result[0]);
             return $result[0];
+        else:
+            return false;
         endif;
     }
 
@@ -94,6 +96,80 @@ class Order extends Model {
 
         if (count($result) > 0):
             return $result;
+        endif;
+    }
+
+    /**
+     * Lista todas os orders
+     */
+    public static function listAllWithPage($currentPage, $limit) {
+
+        $start = (isset($currentPage) && $currentPage > 0 ? (int) $currentPage - 1 : 0);
+
+        $sql = new Sql();
+
+        $results = $sql->select(
+                '
+                    SELECT sql_calc_found_rows *
+                    FROM tb_orders a
+                    INNER JOIN tb_ordersstatus b USING(idstatus)
+                    INNER JOIN tb_carts c USING(idcart)
+                    INNER JOIN tb_users d ON d.user_id = a.iduser                    
+                    INNER JOIN tb_addresses e USING(idaddress)
+                    INNER JOIN tb_persons f USING(person_id)
+                    ORDER BY a.dtregister DESC
+                   LIMIT :limit OFFSET :offset', [
+            ':limit' => $limit,
+            ':offset' => $start
+        ]);
+
+        $total = $sql->select('select found_rows() as nrtotal');
+
+        if (count($results) > 0):
+            return [
+                'data' => $results,
+                'total' => $total[0]['nrtotal']
+            ];
+        else:
+            return false;
+        endif;
+    }
+
+    /**
+     * Lista todas os orders
+     */
+    public static function searchWithPage($search, $currentPage, $limit) {
+
+        $start = (isset($currentPage) && $currentPage > 0 ? (int) $currentPage - 1 : 0);
+
+        $sql = new Sql();
+
+        $results = $sql->select(
+                '
+                    SELECT sql_calc_found_rows *
+                    FROM tb_orders a
+                    INNER JOIN tb_ordersstatus b USING(idstatus)
+                    INNER JOIN tb_carts c USING(idcart)
+                    INNER JOIN tb_users d ON d.user_id = a.iduser                    
+                    INNER JOIN tb_addresses e USING(idaddress)
+                    INNER JOIN tb_persons f USING(person_id)
+                    WHERE f.person_name LIKE :s OR a.idorder LIKE :s
+                    ORDER BY a.dtregister DESC
+                   LIMIT :limit OFFSET :offset', [
+            ':s' => "%$search%",
+            ':limit' => $limit,
+            ':offset' => $start
+        ]);
+
+        $total = $sql->select('select found_rows() as nrtotal');
+
+        if (count($results) > 0):
+            return [
+                'data' => $results,
+                'total' => $total[0]['nrtotal']
+            ];
+        else:
+            return false;
         endif;
     }
 

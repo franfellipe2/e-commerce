@@ -35,7 +35,6 @@ $app->get('/checkout', function() {
         'address' => $address->getValues(),
         'products' => $cart->listProducts()
     ]);
-    
 });
 
 
@@ -56,19 +55,23 @@ $app->post('/checkout', function() {
     //Se não der erro envia para a pagina de pagamento
     if (!$address->getError()):
 
+
+
         $order = new Order;
         $order->setData([
             'idcart' => $cart->getIdcart(),
-            'iduser' => User::getUserIdBySession(),
+            'user_id' => User::getUserIdBySession(),
             'idstatus' => Ordersstatus::EM_ABERTO,
             'idaddress' => $address->getIdaddress(),
             'vltotal' => $cart->getTotal()
-        ]);        
-        
-        $order->save();        
-        
-        header('location: ' . HOME . '/order/' . $order->getIdorder());
-        exit;
+        ]);
+
+        if ($order->save()):
+            header('location: ' . HOME . '/order/' . $order->getIdorder());
+            exit;
+        else:
+            echo 'erro ao salvar pedido!';
+        endif;
 
     else:
         $tpl = new Page();
