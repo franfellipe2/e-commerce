@@ -23,7 +23,7 @@
                         <div class="box-tools">
                             <form action="<?php echo htmlspecialchars( $ADMIN_URL, ENT_COMPAT, 'UTF-8', FALSE ); ?>/users/" method="get">
                                 <div class="input-group input-group-sm" style="width: 150px;">
-                                    <input type="text" name="search" class="form-control pull-right" placeholder="Buscar" value="<?php echo htmlspecialchars( $search, ENT_COMPAT, 'UTF-8', FALSE ); ?>">
+                                    <input type="text" name="search" class="form-control pull-right" placeholder="Buscar" value='<?php if( !empty($search) ){ ?><?php echo htmlspecialchars( $search, ENT_COMPAT, 'UTF-8', FALSE ); ?><?php } ?>'>
                                     <div class="input-group-btn">
                                         <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
                                     </div>

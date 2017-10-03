@@ -82,8 +82,9 @@ $app->get('/admin/users/:id/delete', function($id) {
     User::verifyLogin(3);
     $tpl = new PageAdmin();
     User::delete($id);
-    $users = User::listAll();
-    $tpl->setTpl('users', array('users' => $users, 'session' => $_SESSION[User::SESSION]));
+
+    header('location: ' . ADMIN_URL . '/users/');
+    exit;
 });
 
 //ADMIN > USER UPDATE

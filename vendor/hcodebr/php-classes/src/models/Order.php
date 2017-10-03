@@ -153,10 +153,11 @@ class Order extends Model {
                     INNER JOIN tb_users d ON d.user_id = a.iduser                    
                     INNER JOIN tb_addresses e USING(idaddress)
                     INNER JOIN tb_persons f USING(person_id)
-                    WHERE f.person_name LIKE :s OR a.idorder LIKE :s
+                    WHERE f.person_name LIKE :s OR a.idorder = :id
                     ORDER BY a.dtregister DESC
                    LIMIT :limit OFFSET :offset', [
             ':s' => "%$search%",
+            ':id' => "$search",
             ':limit' => $limit,
             ':offset' => $start
         ]);
