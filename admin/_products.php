@@ -1,9 +1,12 @@
 <?php
+
 use Hcode\Page;
 use Hcode\PageAdmin;
 use Hcode\Models\User;
 use Hcode\Models\Category;
 use Hcode\Models\Products;
+use Hcode\Models\Pagination;
+
 // -------------------------------------------------------------------
 // ADMIN > PRODUTOS
 // -------------------------------------------------------------------
@@ -12,12 +15,48 @@ $app->get('/admin/products/', function() {
 
     User::verifyLogin(3);
 
+    //CONFIGURA A PAGINAÇÃO
+    $currentPage = (!empty($_GET['page']) ? $_GET['page'] : 1 );
+    $limit = 4;
+    $maxLinks = 8;
+    $link = ADMIN_URL . '/products/?page=';
+
+    //BUSCA OS RESULTADOS    
+    $search = '';
+
+    //por busca
+    if (!empty($_GET['search'])):
+
+        $search = $_GET['search'];
+
+        //altera o link da paginação
+        $link = ADMIN_URL . '/products/?search=' . $search . '&page=';
+
+        $products = Products::searchWithPage($search, $currentPage, $limit);
+
+    //sem busca    
+    else:
+
+        $products = Products::listAllWithPage($currentPage, $limit);
+
+    endif;
+    
+    //Monta a paginação
+    $pagination = new Pagination($link, $products['total'], $currentPage, $limit, $maxLinks);
+
     $tpl = new PageAdmin();
 
-    $products = Products::listAll();
-
-    $tpl->setTpl('products', array('products' => $products));
+    $tpl->setTpl('products', [
+        'products' => $products['data'],
+        'search' => $search,
+        'pages' => $pagination->getLinksNavigation(),
+        'currentpage' => $currentPage,
+        'totalpages' => $pagination->getTotalPages(),
+        'firstLink' => $link . '1',
+        'endLink' => $link . $pagination->getTotalPages()
+    ]);
 });
+
 //  ADMIN > PRODUTOS CREATE
 $app->get('/admin/products/create', function() {
 

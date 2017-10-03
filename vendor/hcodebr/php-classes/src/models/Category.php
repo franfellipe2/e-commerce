@@ -13,7 +13,7 @@ class Category extends Model {
     private $error;
 
     /**
-     * Lista todos as categorias do sistema
+     * Lista todas as categorias do sistema
      * @return array/false
      */
     public static function listAll() {
@@ -31,7 +31,7 @@ class Category extends Model {
     }
 
     /**
-     * Lista todos as categorias do sistema com paginação
+     * Lista todas as categorias do sistema com paginação
      * @return array/false
      */
     public static function listAllWithPage($currentPage, $limit) {
@@ -236,7 +236,7 @@ class Category extends Model {
         $start = (isset($_GET['page']) ? $_GET['page'] - 1 : 0 );
 
         $sql = new Sql();
-        $products = $sql->select(
+        $result = $sql->select(
                 'SELECT sql_calc_found_rows * FROM  tb_products a
                 INNER JOIN tb_categoriesproducts b ON a.idproduct = b.idproduct
                 WHERE b.idcategory = :idcategory
@@ -248,12 +248,16 @@ class Category extends Model {
                 ]
         );
 
-        $totalProducts = $sql->select('select found_rows() as nrtotal');
+        $total = $sql->select('select found_rows() as nrtotal');
 
-        return [
-            'data' => Products::cheklist($products),
-            'total' => $totalProducts[0]['nrtotal']
-        ];
+        if (count($result) > 0):
+            return [
+                'data' => Products::cheklist($result),
+                'total' => $total[0]['nrtotal']
+            ];
+        else:
+            return false;
+        endif;
     }
 
 }

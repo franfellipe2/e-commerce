@@ -12,7 +12,7 @@ class Products extends Model {
     private $error;
 
     /**
-     * Lista todos os usuarios do sistema
+     * Lista todos os produtos do sistema
      * @return array-or-false
      */
     public static function listAll() {
@@ -25,6 +25,64 @@ class Products extends Model {
 
             return Products::cheklist($results);
 
+        else:
+            return false;
+        endif;
+    }
+
+    /**
+     * Lista todos os produtos do sistema com paginação
+     * @return array/false
+     */
+    public static function listAllWithPage($currentPage, $limit) {
+
+        $start = (isset($currentPage) && $currentPage > 0 ? (int) $currentPage - 1 : 0);
+
+        $products = new Products();
+        $sql = new Sql();
+        $results = $sql->select('SELECT sql_calc_found_rows * FROM ' . self::DB_TABLE . '                                  
+                                 ORDER BY idproduct DESC LIMIT :limit OFFSET :offset', [
+            ':limit' => $limit,
+            ':offset' => $start
+        ]);
+
+        $total = $sql->select('select found_rows() as nrtotal');
+
+        if (count($results) > 0):
+            return [
+                'data' => $results,
+                'total' => $total[0]['nrtotal']
+            ];
+        else:
+            return false;
+        endif;
+    }
+
+    /**
+     * Buscas produtos do sistema com paginação
+     * @return array/false
+     */
+    public static function searchWithPage($search, $currentPage, $limit) {
+
+        $start = (isset($currentPage) && $currentPage > 0 ? (int) $currentPage - 1 : 0);
+
+        $products = new Products();
+        $sql = new Sql();
+        $results = $sql->select('SELECT sql_calc_found_rows * FROM ' . self::DB_TABLE . '  
+                                 WHERE desproduct LIKE :s
+                                 LIMIT :limit OFFSET :offset', [
+            ':s' => $search,
+            ':limit' => $limit,
+            ':offset' => $start
+        ]);
+
+        $total = $sql->select('select found_rows() as nrtotal');
+
+        if (count($results) > 0):
+            return [
+                'data' => $results,
+                'total' => $total[0]['nrtotal']
+            ];
         else:
             return false;
         endif;
