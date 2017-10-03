@@ -253,6 +253,75 @@ class User extends Model {
     }
 
     /**
+     * Faz uma busca por usuário com paginação
+     * @param string $search
+     * @param int $limit
+     * @return boolean/array
+     */
+    public static function searhcWithPage($search, $nrPage, $limit = 8) {
+
+        $start = (isset($nrPage) && $nrPage > 0 ? $nrPage - 1 : 0 );
+
+        $users = new User();
+        $sql = new Sql();
+
+        $results = $sql->select('SELECT sql_calc_found_rows * 
+                                 FROM `tb_users` a INNER JOIN tb_persons b USING(person_id) 
+                                 WHERE b.person_name LIKE :s OR a.user_login LIKE :s OR b.person_mail LIKE :s
+                                 ORDER by b.person_name ASC
+                                 LIMIT :limit OFFSET :offset
+                                 ', [
+            ':s' => "%$search%",
+            ':limit' => (int)$limit,
+            ':offset' => (int)$start
+        ]);
+
+        $total = $sql->select('select found_rows() as nrtotal');
+
+        if (count($results) > 0):
+            return [
+                'data' => $results,
+                'total' => $total[0]['nrtotal']
+            ];
+        else:
+            return false;
+        endif;
+    }
+    
+   /**
+    * Mostra Todos os usuários utilizando paginação
+    * @param int $limit
+    * @return boolean/array
+    */
+    public static function listAllWithPage($nrPage, $limit = 8) {
+
+        $start = (isset($nrPage) && $nrPage > 0 ? $nrPage - 1 : 0 );
+
+        $users = new User();
+        $sql = new Sql();
+
+        $results = $sql->select('SELECT sql_calc_found_rows * 
+                                 FROM `tb_users` a INNER JOIN tb_persons b USING(person_id)                                 
+                                 ORDER by a.user_id DESC
+                                 LIMIT :limit OFFSET :offset
+                                 ', [
+            ':limit' => (int)$limit,
+            ':offset' => (int)$start
+        ]);
+
+        $total = $sql->select('select found_rows() as nrtotal');
+
+        if (count($results) > 0):
+            return [
+                'data' => $results,
+                'total' => $total[0]['nrtotal']
+            ];
+        else:
+            return false;
+        endif;
+    }
+
+    /**
      * Enviar email para recuperação de senha
      * @param string $email
      */
@@ -526,14 +595,14 @@ class User extends Model {
 
         if (!empty($_SESSION[User::SESSION_MSG_SUCESS])):
 
-            $msg = $_SESSION[User::SESSION_MSG_SUCESS];           
+            $msg = $_SESSION[User::SESSION_MSG_SUCESS];
             self::clearMsgSucess();
-            
+
             return $msg;
 
         endif;
     }
-    
+
     public static function clearMsgSucess() {
         $_SESSION[User::SESSION_MSG_SUCESS] = null;
     }
@@ -546,7 +615,7 @@ class User extends Model {
 
         $_SESSION[User::SESSION_MSG_SUCESS] = $msg;
     }
-    
+
     /**
      * Retorna mensagens de Erro registradas pelo metodo setMsgError($msg)
      * @return string
@@ -556,14 +625,14 @@ class User extends Model {
         if (!empty($_SESSION[User::SESSION_MSG_ERROR])):
 
             $msg = $_SESSION[User::SESSION_MSG_ERROR];
-             self::clearMsgError();
+            self::clearMsgError();
 
             return $msg;
 
         endif;
     }
-    
-     public static function clearMsgError() {
+
+    public static function clearMsgError() {
         $_SESSION[User::SESSION_MSG_ERROR] = null;
     }
 
